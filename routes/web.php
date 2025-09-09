@@ -20,5 +20,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::resource('/activity', ActivityController::class)->names('activity');
 });
+Route::middleware('auth')->controller(ActivityController::class)->group(function () {
+  Route::get('/create', 'create')->name('activities.create');
+  Route::get('/store', 'store')->name('activities.store');
+});
 
 require __DIR__ . '/auth.php';
