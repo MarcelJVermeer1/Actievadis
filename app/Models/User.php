@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -15,6 +16,13 @@ class User extends Authenticatable {
 
     protected $keyType = 'string';
     public $incrementing = false;
+
+    /**
+     * Accessor for is_admin attribute.
+     */
+    public function getIsAdminAttribute() {
+        return (bool) $this->admin;
+    }
 
     /**
      * The attributes that are mass assignable.
