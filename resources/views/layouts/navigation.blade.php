@@ -17,7 +17,7 @@
                     </x-nav-link>
                     @if (Auth::user() && Auth::user()->is_admin)
                     <x-nav-link :href="route('usermanagement')" :active="request()->routeIs('usermanagement')">
-                        {{ __('User Management') }}
+                        {{ __('Gebruikersbeheer') }}
                     </x-nav-link>
                     @endif
                 </div>
