@@ -1,8 +1,8 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex h-2/3">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
@@ -20,10 +20,8 @@
                         {{ __('Gebruikersbeheer') }}
                     </x-nav-link>
                     @endif
-                </div>
-                      <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('activity.index')" :active="request()->routeIs('activity.index')">
-                        {{ __('Activieten Lijst') }}
+                        {{ __('Activiteiten Lijst') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -45,7 +43,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Profiel') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -55,7 +53,7 @@
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Uitloggen') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -91,7 +89,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('Profiel') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
