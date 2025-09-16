@@ -6,6 +6,18 @@
 - Backend code must always be written in English.
 - Frontend code (user-facing) may remain in Dutch.
 
+- ### For variable naming we use snake case like:
+```
+$this_is_my_variable
+```
+
+- ### Functions are done in camelCase like:
+```
+function myFunction
+```
+
+- Id should always be a UUID
+
 ## Branch Naming
 
 Branch names should follow this pattern:

@@ -13,4 +13,11 @@ class ActivityController extends Controller
 
         return view('activity.index', compact('activities'));
     }
+
+    public function enrolled()
+    {
+        $enrolledActivities = auth()->user()->enrolledActivities;
+
+        return view('enrolled.index', compact('enrolledActivities'));
+    }
 }

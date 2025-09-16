@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::resource('/activity', ActivityController::class)->names('activity');
+    Route::get('/enrolled', [ActivityController::class, 'enrolled'])->name('activity.enrolled');
 });
 
 require __DIR__ . '/auth.php';
