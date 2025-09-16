@@ -15,10 +15,12 @@ class ActivityController extends Controller
 
     return view('activity.index', compact('activities'));
   }
+  
   public function create(Request $request)
   {
     return view('admin.createActivity');
   }
+  
   public function store(Request $request)
   {
     $request->merge(['costs' => str_replace(',', '.', $request->input('costs'))]);
@@ -37,4 +39,11 @@ class ActivityController extends Controller
 
     return redirect()->route('dashboard');
   }
+
+    public function enrolled()
+    {
+        $enrolledActivities = auth()->user()->enrolledActivities;
+
+        return view('enrolled.index', compact('enrolledActivities'));
+    }
 }

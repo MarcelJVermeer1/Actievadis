@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::resource('/activity', ActivityController::class)->names('activity');
+    Route::get('/enrolled', [ActivityController::class, 'enrolled'])->name('activity.enrolled');
 });
 Route::middleware('admin')->controller(ActivityController::class)->group(function () {
   Route::get('/createActivities', 'create')->name('activities.create');
