@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\User;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
@@ -15,14 +15,14 @@ class ActivityController extends Controller
 
     return view('activity.index', compact('activities'));
   }
-  public function store()
-  {
-    $user = Auth::user()->isAdmin;
-    return $user ? view('admin.create-activity') : view('dashboard');
-    // return view('admin.create-activity');
-  }
   public function create(Request $request)
   {
+    return view('admin.createActivity');
+  }
+  public function store(Request $request)
+  {
+    $request->merge(['costs' => str_replace(',', '.', $request->input('costs'))]);
+
     $validated = $request->validate([
       'name' => 'required|string|max:255',
       'location' => 'required|string|max:255',
@@ -34,6 +34,7 @@ class ActivityController extends Controller
     ]);
 
     Activity::create($validated);
+
     return redirect()->route('dashboard');
   }
 }
