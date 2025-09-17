@@ -5,7 +5,6 @@
 
     <form action="{{ route('activities.store') }}" method="POST" class="bg-white p-8 rounded-2xl shadow-md space-y-6">
       @csrf
-
       <!-- Name -->
       <div>
         <label for="name" class="block text-sm font-medium text-gray-700">Naam</label>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('location');
             $table->boolean('food');
-            $table->string('description');
+            $table->text('description');
             $table->dateTime('starttime');
             $table->dateTime('endtime');
             $table->double('costs');
