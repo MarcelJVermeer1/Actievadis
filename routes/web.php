@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\EnrolledController;
 use App\Http\Controllers\UserManagementController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,11 +25,14 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::resource('/activity', ActivityController::class)->names('activity');
-    Route::get('/enrolled', [ActivityController::class, 'enrolled'])->name('activity.enrolled');
+    Route::get('/enrolled', [EnrolledController::class, 'index'])->name('activity.enrolled');
 });
 Route::middleware('admin')->controller(ActivityController::class)->group(function () {
   Route::get('/createActivities', 'create')->name('activities.create');
   Route::post('/store', 'store')->name('activities.store');
 });
-
+Route::middleware('auth')->controller(EnrolledController::class)->group(function (){
+    Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
+    Route::delete('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
+});
 require __DIR__ . '/auth.php';

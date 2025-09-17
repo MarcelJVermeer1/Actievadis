@@ -46,4 +46,10 @@ class ActivityController extends Controller
 
         return view('enrolled.index', compact('enrolledActivities'));
     }
+
+    public function show($id)
+    {
+        $activity = Activity::findOrFail($id);
+        return view('activity.show', compact('activity'));
+    }
 }
