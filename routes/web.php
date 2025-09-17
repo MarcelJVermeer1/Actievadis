@@ -31,11 +31,8 @@ Route::middleware('admin')->controller(ActivityController::class)->group(functio
   Route::get('/createActivities', 'create')->name('activities.create');
   Route::post('/store', 'store')->name('activities.store');
 });
-
-Route::get('/activity/enroll/{activity}', [EnrolledController::class, 'store'])
-    ->name('activity.enroll');
-Route::delete('/enrolled/{activity}', [EnrolledController::class, 'destroy'])
-    ->middleware(['auth', 'verified'])
-    ->name('enrolled.destroy');
-
+Route::middleware('auth')->controller(EnrolledController::class)->group(function (){
+    Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
+    Route::delete('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
+});
 require __DIR__ . '/auth.php';
