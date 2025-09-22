@@ -17,8 +17,8 @@ class AdminMiddleware
 
     public function handle(Request $request, Closure $next): Response
     {
-      
-        if (!Auth::check() || !Auth::user()->is_admin) {
+
+        if (!Auth::check() || !Auth::user()->admin) {
           // abort(403, 'Unauthorized');
           return redirect()->route('dashboard');
         }

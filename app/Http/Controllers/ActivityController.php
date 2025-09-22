@@ -15,12 +15,12 @@ class ActivityController extends Controller
 
     return view('activity.index', compact('activities'));
   }
-  
+
   public function create(Request $request)
   {
     return view('admin.createActivity');
   }
-  
+
   public function store(Request $request)
   {
     $request->merge(['costs' => str_replace(',', '.', $request->input('costs'))]);
@@ -28,10 +28,10 @@ class ActivityController extends Controller
     $validated = $request->validate([
       'name' => 'required|string|max:255',
       'location' => 'required|string|max:255',
-      'food' => 'nullable|boolean',
+      'food' => 'boolean',
       'description' => 'required|min:5|max:1000',
       'starttime' => 'required|date',
-      'endtime' => 'required|date',
+      'endtime' => 'required|date|after:starttime',
       'costs' => 'required|numeric'
     ]);
 
