@@ -12,29 +12,33 @@
 
         <h1 class="text-5xl font-bold text-center">{{ $activity->name }}</h1>
 
-        <p class="text-lg text-orange-400">Omschrijving: </p>
+        <p class="text-lg text-orange-400 mx-auto">Omschrijving</p>
         <p class="text-lg">{{ $activity->description }}</p>
-        <p class="text-lg text-orange-400">Date: </p>
-        <p class="text-lg">
-            Begin tijd: {{ \Carbon\Carbon::parse($activity->starttime)->format('d-m-Y H:i') }}
-        </p>
-        <p class="text-lg">
-            Eind tijd: {{ \Carbon\Carbon::parse($activity->endtime)->format('d-m-Y H:i') }}
-        </p>
         <p class="text-lg text-orange-400">Kosten: €{{ number_format($activity->costs, 2) }}</p>
         <p class="text-lg text-orange-400">Inclusief eten: {{ $activity->food ? 'Ja' : 'Nee' }}</p>
+        <div class="grid grid-flow-col gap-4">
+            <h4 class="text-xl text-orange-400">Locatie (M)</h4>
+            <h4 class="text-xl ">{{ $activity->location }}</h4>
+        </div>
+        <div class="grid grid-flow-col">
 
-        <h4 class="text-xl text-orange-400">Locatie (M)</h4>
-        <h4 class="text-xl ">{{ $activity->location }}</h4>
+            <p class="text-lg text-orange-400">Date: </p>
+            <p class="text-lg">
+                Begin tijd: {{ \Carbon\Carbon::parse($activity->starttime)->format('d-m-Y H:i') }}
+            </p>
+            <p class="text-lg">
+                Eind tijd: {{ \Carbon\Carbon::parse($activity->endtime)->format('d-m-Y H:i') }}
+            </p>
+        </div>
 
 
-        <div class="flex gap-4 pt-6">
+        <div class="flex justify-center gap-6 pt-6">
             <a href="{{ route('activity.enroll', $activity->id) }}"
-               class="px-5 py-1.5 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-md font-semibold text-sm">
+               class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
                 Aanwezig
             </a>
             <a href="{{ route('activity.enroll', $activity->id) }}"
-               class="px-5 py-1.5 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-md font-semibold text-sm">
+               class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
                 Misschien
             </a>
         </div>

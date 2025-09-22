@@ -23,6 +23,7 @@
 
       <!-- Food (boolean) -->
       <div class="flex items-center">
+          <input type="hidden" name="food" value="0">
         <input type="checkbox" name="food" id="food" value="1" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
         <label for="food" class="ml-2 block text-sm text-gray-700">Inclusief eten</label>
       </div>
@@ -68,6 +69,18 @@
           Aanmaken
         </button>
       </div>
+        <!-- Error display -->
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative mt-6" role="alert">
+                <strong class="font-bold">Oeps!</strong>
+                <span class="block sm:inline">Er zijn enkele problemen met de ingevoerde gegevens.</span>
+                <ul class="mt-2 list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </form>
   </div>
 </x-app-layout>
