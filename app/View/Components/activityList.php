@@ -10,9 +10,12 @@ class ActivityList extends Component
 {
     public $activities;
 
-    public function __construct($activities = [])
+    public $role;
+
+    public function __construct($activities = [], $role = "activity")
     {
         $this->activities = $activities;
+        $this->role = $role;
     }
 
     public function render()
