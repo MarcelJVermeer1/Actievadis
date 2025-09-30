@@ -5,42 +5,29 @@
       <div class="flex h-2/3">
         <!-- Logo -->
         <div class="shrink-0 flex items-center">
-          <a href="{{ route('dashboard') }}">
+          <a href="{{ route('activity.index') }}">
             <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
           </a>
         </div>
 
         <!-- Navigation Links -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-          <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-            {{ __('Dashboard') }}
+          <x-nav-link :href="route('activity.index')" :active="request()->routeIs('activity.index')">
+            {{ __('Activiteiten Lijst') }}
           </x-nav-link>
+          @if(auth()->check() && auth()->user()->admin)
+            <x-nav-link :href="route('activities.create')" :active="request()->routeIs('activities.create')">
+              {{ __('Activiteiten Aanmaken') }}
+            </x-nav-link>
+          @endif
           @if (Auth::user() && Auth::user()->is_admin)
             <x-nav-link :href="route('usermanagement')" :active="request()->routeIs('usermanagement')">
               {{ __('Gebruikersbeheer') }}
             </x-nav-link>
           @endif
         </div>
-        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-          <x-nav-link :href="route('activity.enrolled')" :active="request()->routeIs('activity.enrolled')">
-            {{ __('Ingeschreven') }}
-          </x-nav-link>
-        </div>
-        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-          <x-nav-link :href="route('activity.index')" :active="request()->routeIs('activity.index')">
-            {{ __('Activiteiten Lijst') }}
-          </x-nav-link>
-        </div>
-        @if(auth()->check() && auth()->user()->admin)
-          <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-            <x-nav-link :href="route('activities.create')" :active="request()->routeIs('activities.create')">
-              {{ __('Activiteiten Aanmaken') }}
-            </x-nav-link>
-          </div>
-        @endif
       </div>
 
-      <!-- Settings Dropdown -->
       <div class="hidden sm:flex sm:items-center sm:ms-6">
         <x-dropdown align="right" width="48">
           <x-slot name="trigger">
