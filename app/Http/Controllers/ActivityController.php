@@ -48,7 +48,7 @@ class ActivityController extends Controller
 
     Activity::create($validated);
 
-    return redirect()->route('dashboard');
+    return redirect()->route('activity.index');
   }
 
   public function enrolled()
@@ -60,7 +60,38 @@ class ActivityController extends Controller
 
   public function show($id)
   {
-    $activity = Activity::findOrFail($id);
-    return view('activity.show', compact('activity'));
-  }
+    $activity = Activity::with([
+        'users' => fn($q) => $q->withPivot('status')->orderBy('name'),
+        'guests'
+    ])->findOrFail($id);
+
+    // splits users
+    $userAttendees = $activity->users->where('pivot.status', 'attending');
+    $userMaybes   = $activity->users->where('pivot.status', 'maybe');
+
+    // splits guests
+    $guestAttendees = $activity->guests->where('status', 'attending');
+    $guestMaybes   = $activity->guests->where('status', 'maybe');
+
+    // capacity
+    $totalAttending = $userAttendees->count() + $guestAttendees->count();
+    $max = $activity->max_participants;
+    $remaining = $max ? max(0, $max - $totalAttending) : null;
+    $isFull = $max ? $totalAttending >= $max : false;
+
+    // admin check
+    $canEdit = auth()->check() && auth()->user()->is_admin;
+
+    return view('activity.show', [
+        'activity'       => $activity,
+        'userAttendees'  => $userAttendees,
+        'userMaybes'     => $userMaybes,
+        'guestAttendees' => $guestAttendees,
+        'guestMaybes'    => $guestMaybes,
+        'totalAttending' => $totalAttending,
+        'remaining'      => $remaining,
+        'isFull'         => $isFull,
+        'canEdit'        => $canEdit,
+    ]);
+  } 
 }

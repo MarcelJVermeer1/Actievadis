@@ -20,7 +20,7 @@ class AdminMiddleware
 
         if (!Auth::check() || !Auth::user()->admin) {
           // abort(403, 'Unauthorized');
-          return redirect()->route('dashboard');
+          return redirect()->route('activity.index');
         }
 
         return $next($request);

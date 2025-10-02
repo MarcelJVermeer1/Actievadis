@@ -13,7 +13,7 @@ class UserManagementController extends Controller {
     public function index() {
         $currentUser = Auth::user();
         if (!$currentUser || !$currentUser->is_admin) {
-            return redirect()->route('dashboard');
+            return redirect()->route('activity.index');
         }
         return view('usermanagement', [
             'currentUser' => $currentUser,
@@ -27,7 +27,7 @@ class UserManagementController extends Controller {
     public function destroy(string $id) {
         $currentUser = Auth::user();
         if (!$currentUser || !$currentUser->is_admin) {
-            return redirect()->route('dashboard');
+            return redirect()->route('activity.index');
         }
 
         $user = User::findOrFail($id);

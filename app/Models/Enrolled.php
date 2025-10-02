@@ -8,7 +8,7 @@ class Enrolled extends Model
 {
     protected $table = 'enrolled';
     public $incrementing = false;
-    protected $primaryKey = null;
+    protected $primaryKey = 'id';
     protected $keyType = 'string';
 
     protected $fillable = [

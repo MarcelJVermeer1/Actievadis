@@ -10,6 +10,7 @@ class Activity extends Model
     protected $fillable = ['name', 'location', 'food', 'description', 'starttime', 'endtime', 'costs'];
 
     public $incrementing = false;
+    protected $keyType = 'string'; 
     public static function boot() {
       
       parent::boot();
@@ -22,6 +23,12 @@ class Activity extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
+            ->withPivot('status')
             ->withTimestamps();
+    }
+
+    public function guests()
+    {
+        return $this->hasMany(ActivityGuest::class);
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Enrolled;
+
 use Illuminate\Http\Request;
+use App\Models\Activity;
+use App\Models\Enrolled;
+use App\Models\ActivityGuest;
 
 class EnrolledController extends Controller
 {
@@ -35,24 +38,68 @@ class EnrolledController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store($activityId)
+    public function store(Request $request, $activityId)
     {
         $userId = auth()->id();
+        $status = $request->input('status', 'attending'); // default aanwezig
 
-        $alreadyEnrolled = Enrolled::where('user_id', $userId)
-            ->where('activity_id', $activityId)
-            ->exists();
+        $activity = Activity::with(['users', 'guests'])->findOrFail($activityId);
 
-        if (!$alreadyEnrolled) {
-            Enrolled::create([
-                'user_id' => $userId,
-                'activity_id' => $activityId,
-                // 'status' => '',
-            ]);
+        // capaciteit check → telt users en guests met status=attending
+        $totalAttending = $activity->users()->wherePivot('status','attending')->count()
+            + $activity->guests()->where('status','attending')->count();
+
+        if ($status === 'attending' 
+            && $activity->max_participants 
+            && $totalAttending >= $activity->max_participants) 
+        {
+            return back()->with('error', 'Deze activiteit is vol. Je kunt je niet meer als aanwezig inschrijven.');
         }
 
-        return redirect()->route('activity.index');
+        // create of update inschrijving
+        Enrolled::updateOrCreate(
+            ['user_id' => $userId, 'activity_id' => $activityId],
+            ['status'  => $status]
+        );
 
+        return redirect()->route('activity.show', $activityId)
+            ->with('success', 'Je inschrijving is opgeslagen.');
+
+    }
+
+    public function storeGuest(Request $request,$activityId)
+    {
+        $activity = Activity::with(['users', 'guests'])->findOrFail($activityId);
+        
+        $validated = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'nullable|string|max:30',
+            'status'=> 'in:attending,maybe'
+        ]);
+
+        $status = $validated['status'] ?? 'attending';
+
+        // capaciteit check
+        $totalAttending = $activity-users()->wherePivot('status','attending')->count
+            + $activity->guests()->where('status','attending')->count();
+
+        if ($status === 'attending' 
+            && $activity->max_participants 
+            && $totalAttending >= $activity->max_participants) 
+        {
+            return back()->with('error', 'Deze activiteit is vol. Je kunt je niet meer als aanwezig inschrijven.');
+        }
+         // nieuwe guest inschrijven
+        $activity->guests()->create([
+            'name'   => $validated['name'],
+            'email'  => $validated['email'],
+            'phone'  => $validated['phone'] ?? null,
+            'status' => $status,
+        ]);
+
+        return redirect()->route('activity.show', $activityId)
+            ->with('success', 'Je bent ingeschreven als gast.');
     }
 
     /**
@@ -92,5 +139,22 @@ class EnrolledController extends Controller
 
         return redirect()->route('activity.index')
             ->with('success', 'Je bent afgemeld voor deze activiteit.');
+    }
+
+    /**
+     * Gast uitschrijven
+     */
+    public function destroyGuest($activityId, Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        ActivityGuest::where('activity_id', $activityId)
+            ->where('email', $request->input('email'))
+            ->delete();
+
+        return redirect()->route('activity.show', $activityId)
+            ->with('success', 'De gast is afgemeld.');
     }
 }
