@@ -51,7 +51,7 @@ class EnrolledController extends Controller
             ]);
         }
 
-        return redirect()->route('activity.enrolled');
+        return redirect()->route('activity.index');
 
     }
 
@@ -90,7 +90,7 @@ class EnrolledController extends Controller
             ->where('activity_id', $activityId)
             ->delete();
 
-        return redirect()->route('dashboard')
+        return redirect()->route('activity.index')
             ->with('success', 'Je bent afgemeld voor deze activiteit.');
     }
 }

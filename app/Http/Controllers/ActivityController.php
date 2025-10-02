@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
-use App\Models\User;
+use App\Models\Enrolled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +13,18 @@ class ActivityController extends Controller
   {
     $activities = Activity::all();
 
-    return view('activity.index', compact('activities'));
+    $enrollments = Enrolled::with('activity')
+      ->where('user_id', Auth::id())
+      ->get();
+
+    // Extra variable: oldActivities (activities that have ended)
+    $oldActivities = $activities->where('starttime', '<', now());
+
+
+    $enrolledActivities = $enrollments->pluck('activity')->where('starttime', '>=', now());
+    $availableActivities = $activities->diff($enrolledActivities)->where('starttime', '>=', now());
+
+    return view('activity.index', compact('activities', 'enrolledActivities', 'availableActivities', 'oldActivities'));
   }
 
   public function create(Request $request)
@@ -40,16 +51,16 @@ class ActivityController extends Controller
     return redirect()->route('dashboard');
   }
 
-    public function enrolled()
-    {
-        $enrolledActivities = auth()->user()->enrolledActivities;
+  public function enrolled()
+  {
+    $enrolledActivities = auth()->user()->enrolledActivities;
 
-        return view('enrolled.index', compact('enrolledActivities'));
-    }
+    return view('enrolled.index', compact('enrolledActivities'));
+  }
 
-    public function show($id)
-    {
-        $activity = Activity::findOrFail($id);
-        return view('activity.show', compact('activity'));
-    }
+  public function show($id)
+  {
+    $activity = Activity::findOrFail($id);
+    return view('activity.show', compact('activity'));
+  }
 }

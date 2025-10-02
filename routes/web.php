@@ -33,6 +33,6 @@ Route::middleware('admin')->controller(ActivityController::class)->group(functio
 });
 Route::middleware('auth')->controller(EnrolledController::class)->group(function (){
     Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
-    Route::delete('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
+    Route::get('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
 });
 require __DIR__ . '/auth.php';
