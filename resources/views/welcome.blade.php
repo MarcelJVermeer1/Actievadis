@@ -20,7 +20,7 @@
 <body>
     <div class="flex flex-col justify-center items-center min-h-screen bg-gray-100 p-4">
         <div class="text-center mt-8">
-            <p class="text-2xl font-akshar text-gray-800 mt-2">
+            <p class="text-4xl font-akshar text-gray-800     mt-2">
                 Welkom bij
                 <span class="inline-block" aria-hidden="true">
                     <span class="text-amber-500">Actie</span><span class="text-blue-950">vadis</span>
