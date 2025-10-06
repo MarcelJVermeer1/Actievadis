@@ -28,19 +28,32 @@
             </p>
         </div>
 
-        <div class="mt-6 space-y-4">
+        <div>
             <p class="text-sm text-gray-700">
-                Dit is de startpagina van de applicatie. Gebruik de navigatie bovenaan om door de verschillende secties te bladeren.
+                Hier kan je de opkomende activiteiten vinden die door onze organisatie worden aangeboden.
             </p>
-            <div class="flex justify-center gap-4">
-                <div>
-                    <button
-                        class="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600"
-                        title="Klik hier om de lijst van opkomende activiteiten te zien">
-                        Opkomende Activiteiten
-                    </button>
+        </div>
+
+        <div class="mt-6 space-y-4 w-8/12">
+            @php
+            $activityCount = count($activitiesList);
+            $gridColsClass = $activityCount === 1 ? 'grid-cols-1' : ($activityCount === 2 ? 'grid-cols-2' : 'grid-cols-3');
+            $displayedActivities = $activitiesList->take(3);
+            @endphp
+
+            @if ($displayedActivities->count() > 0)
+            <div class="grid gap-6 {{ $gridColsClass }}">
+                @foreach ($displayedActivities as $activity)
+                <div class="block">
+                    <x-activity-card :activity="$activity" />
                 </div>
+                @endforeach
             </div>
+            @else
+            <p class="text-lg font-medium text-gray-700">
+                Er zijn op dit moment geen activiteiten gepland <i class="fa-regular fa-face-frown"></i>
+            </p>
+            @endif
         </div>
 
         <div>
@@ -73,6 +86,53 @@
             @endif
         </div>
     </div>
+
+    <!-- Modal -->
+    <div id="enrollment-modal" class="fixed inset-0 hidden bg-gray-500/75">
+        <div class="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">Schrijf je in voor deze activiteit</h3>
+                <x-application-logo class="absolute bottom-4 left-4 h-5 w-auto fill-current text-gray-800" />
+            </div>
+            <p class="text-xs text-gray-500 text-opacity-70 mb-4">Na het inschrijven zal je een bevestiging ontvangen op je e-mailadres.</p>
+            <form id="enrollment-form" method="POST" action="{{ route('guest.enrollment.store') }}">
+                @csrf
+                <input type="hidden" name="activity_id" id="activity-id">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Naam</label>
+                    <input type="text" name="name" id="name" placeholder="Vul hier je naam in." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input type="email" name="email" id="email" placeholder="Vul hier je e-mailadres in." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm" required>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" onclick="closeModal()" class="mr-2 rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-400">Annuleren</button>
+                    <button type="submit" class="rounded-md bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600">Inschrijven</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal functionality -->
+    <script>
+        function openModal(activityId) {
+            document.getElementById('activity-id').value = activityId;
+            document.getElementById('enrollment-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('enrollment-modal').classList.add('hidden');
+        }
+
+        // Close modal if clicking outside of it
+        document.getElementById('enrollment-modal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 
 </html>
+<x-wrappers.toast-wrapper></x-wrappers.toast-wrapper>
