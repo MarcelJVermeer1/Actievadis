@@ -44,7 +44,7 @@ class ActivityController extends Controller {
 
     Activity::create($validated);
 
-    return redirect()->route('dashboard');
+    return redirect()->route('dashboard')->with('success', 'Activiteit succesvol aangemaakt!');
   }
 
   public function enrolled() {
