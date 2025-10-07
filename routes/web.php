@@ -5,11 +5,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\EnrolledController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\GuestEnrollmentController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ActivityController::class, 'getActivitiesList'])->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,11 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/enrolled', [EnrolledController::class, 'index'])->name('activity.enrolled');
 });
 Route::middleware('admin')->controller(ActivityController::class)->group(function () {
-  Route::get('/createActivities', 'create')->name('activities.create');
-  Route::post('/store', 'store')->name('activities.store');
+    Route::get('/createActivities', 'create')->name('activities.create');
+    Route::post('/store', 'store')->name('activities.store');
 });
-Route::middleware('auth')->controller(EnrolledController::class)->group(function (){
+Route::middleware('auth')->controller(EnrolledController::class)->group(function () {
     Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
-    Route::delete('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
+    Route::get('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
 });
+Route::post('/guest-enrollment', [GuestEnrollmentController::class, 'store'])->name('guest.enrollment.store');
 require __DIR__ . '/auth.php';
