@@ -34,15 +34,14 @@
 
         <div class="flex justify-center gap-6 pt-6">
             <a href="{{ route('activity.enroll', $activity->id) }}"
-               class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
+                class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
                 Aanwezig
             </a>
             <a href="{{ route('activity.enroll', $activity->id) }}"
-               class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
+                class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
                 Misschien
             </a>
         </div>
     </div>
-
 
 </x-app-layout>

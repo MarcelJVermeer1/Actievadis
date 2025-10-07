@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Enrolled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ActivityController extends Controller
 {
@@ -43,8 +44,11 @@ class ActivityController extends Controller
       'description' => 'required|min:5|max:1000',
       'starttime' => 'required|date',
       'endtime' => 'required|date|after:starttime',
-      'costs' => 'required|numeric'
+      'costs' => 'required|numeric',
+      'max_capacity' => 'required|integer|min:1',
     ]);
+
+    Log::info('Activity store request data:', $request->all());
 
     Activity::create($validated);
 

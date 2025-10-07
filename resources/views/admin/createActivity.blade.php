@@ -62,6 +62,18 @@
           placeholder="0,00" required>
       </div>
 
+       <!-- max -->
+      <div>
+
+        <label for="max_capacity" class="block text-sm font-medium text-gray-700">
+          Maximum aanmeldingen
+        </label>
+        <input type="number" name="max_capacity" id="max_capacity" inputmode="numeric" pattern="^\d+(,)?$"
+          class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          placeholder="1"  min="1" required>
+      </div>
+
+
       <!-- Submit Button -->
       <div class="text-center">
         <button type="submit"
