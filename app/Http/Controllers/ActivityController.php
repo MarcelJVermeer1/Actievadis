@@ -7,29 +7,62 @@ use App\Models\Enrolled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ActivityController extends Controller {
-  public function index() {
-    $activities = Activity::all();
+class ActivityController extends Controller
+{
+  public function index()
+  {
+    $sortEnrolled = request('sort_enrolled', 'date_asc');
+    $sortAvailable = request('sort_available', 'date_asc');
+    $sortOld = request('sort_old', 'date_asc');
 
-    $enrollments = Enrolled::with('activity')
-      ->where('user_id', Auth::id())
-      ->get();
+    function getOrder($sort)
+    {
+      return match ($sort) {
+        'az' => ['name', 'asc'],
+        'za' => ['name', 'desc'],
+        'date_desc' => ['starttime', 'desc'],
+        default => ['starttime', 'asc'],
+      };
+    }
 
-    // Extra variable: oldActivities (activities that have ended)
-    $oldActivities = $activities->where('starttime', '<', now());
+    [$colE, $dirE] = getOrder($sortEnrolled);
+    [$colA, $dirA] = getOrder($sortAvailable);
+    [$colO, $dirO] = getOrder($sortOld);
 
+    $enrolledIds = Enrolled::where('user_id', Auth::id())->pluck('activity_id');
 
-    $enrolledActivities = $enrollments->pluck('activity')->where('starttime', '>=', now());
-    $availableActivities = $activities->diff($enrolledActivities)->where('starttime', '>=', now());
+    $enrolledActivities = Activity::whereIn('id', $enrolledIds)
+      ->where('starttime', '>=', now())
+      ->orderBy($colE, $dirE)
+      ->paginate(3, ['*'], 'enrolled_page')
+      ->appends(request()->query());
 
-    return view('activity.index', compact('activities', 'enrolledActivities', 'availableActivities', 'oldActivities'));
+    $availableActivities = Activity::whereNotIn('id', $enrolledIds)
+      ->where('starttime', '>=', now())
+      ->orderBy($colA, $dirA)
+      ->paginate(3, ['*'], 'available_page')
+      ->appends(request()->query());
+
+    $oldActivities = Activity::whereIn('id', $enrolledIds)
+      ->where('endtime', '<', now())
+      ->orderBy($colO, $dirO)
+      ->paginate(3, ['*'], 'old_page')
+      ->appends(request()->query());
+
+    return view('activity.index', compact(
+      'enrolledActivities',
+      'availableActivities',
+      'oldActivities'
+    ));
   }
 
-  public function create(Request $request) {
+  public function create(Request $request)
+  {
     return view('admin.createActivity');
   }
 
-  public function store(Request $request) {
+  public function store(Request $request)
+  {
     $request->merge(['costs' => str_replace(',', '.', $request->input('costs'))]);
 
     $validated = $request->validate([
@@ -47,18 +80,21 @@ class ActivityController extends Controller {
     return redirect()->route('dashboard')->with('success', 'Activiteit succesvol aangemaakt!');
   }
 
-  public function enrolled() {
+  public function enrolled()
+  {
     $enrolledActivities = auth()->user()->enrolledActivities;
 
     return view('enrolled.index', compact('enrolledActivities'));
   }
 
-  public function show($id) {
+  public function show($id)
+  {
     $activity = Activity::findOrFail($id);
     return view('activity.show', compact('activity'));
   }
 
-  public function getActivitiesList() {
+  public function getActivitiesList()
+  {
     $activitiesList = Activity::where('starttime', '>=', now())
       ->orderBy('starttime', 'asc')
       ->get();
