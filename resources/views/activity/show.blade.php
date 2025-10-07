@@ -44,4 +44,43 @@
         </div>
     </div>
 
+
+    @if($canViewEnrollments)
+        <div class="mt-10 w-4/6 mx-auto bg-white text-blue-950 rounded-lg shadow-lg p-6">
+            <h3 class="text-2xl font-bold mb-4">
+                Aanmeldingen {{ $amountOfEnrollments }}/{{ $activity->max_capacity }}
+            </h3>
+
+            @if($paginator->count())
+                <ul class="mb-6 divide-y divide-gray-200">
+                    @foreach ($paginator as $participant)
+                        <li class="py-3 flex justify-between items-center">
+                            <div>
+                                <span class="font-semibold">{{ $participant['name'] }}</span><br>
+                                <span class="text-gray-500 text-sm">{{ $participant['email'] }}</span>
+                            </div>
+
+                            <span
+                                class="text-xs uppercase px-2 py-1 rounded-full 
+                                        {{ $participant['type'] === 'Gast' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
+                                {{ $participant['type'] }}
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+
+                <!-- Pagination links -->
+                <div class="mt-6 flex justify-center">
+                  {{ $paginator->withQueryString()->links('pagination.tailwind-nl') }}
+                </div>
+            @else
+                <p class="py-2 text-gray-600">Nog geen deelnemers.</p>
+            @endif
+        </div>
+    @else
+        <p class="py-2 text-gray-600">
+            Je hebt geen toegang om de deelnemerslijst te bekijken.
+        </p>
+    @endif
+
 </x-app-layout>
