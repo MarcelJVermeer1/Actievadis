@@ -28,39 +28,19 @@
             </p>
         </div>
 
-        <div>
-            <p class="text-sm text-gray-700">
-                Hier kan je de opkomende activiteiten vinden die door onze organisatie worden aangeboden.
-            </p>
-        </div>
-
         <div class="mt-6 space-y-4 w-8/12">
-            @php
-            $activityCount = count($activitiesList);
-            $gridColsClass = $activityCount === 1 ? 'grid-cols-1' : ($activityCount === 2 ? 'grid-cols-2' : 'grid-cols-3');
-            $displayedActivities = $activitiesList->take(3);
-            @endphp
-
-            @if ($displayedActivities->count() > 0)
-            <div class="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
-                @foreach ($displayedActivities as $activity)
+            @if ($activitiesList->count() > 0)
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+                @foreach ($activitiesList as $activity)
                 <div class="block">
                     <x-activity-card :activity="$activity" />
                 </div>
                 @endforeach
             </div>
             @else
-            <p class="text-lg font-medium text-gray-700">
+            <p class="text-lg font-medium text-gray-700 text-center">
                 Er zijn op dit moment geen activiteiten gepland <i class="fa-regular fa-face-frown"></i>
             </p>
-            @endif
-
-            @if ($activityCount > 3)
-            <div class="mt-4 text-center">
-                <button onclick="openDrawer()" class="rounded-md bg-gray-950/5 px-2.5 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-950/10">
-                    Bekijk alle activiteiten
-                </button>
-            </div>
             @endif
         </div>
 
@@ -90,36 +70,7 @@
         </div>
     </div>
 
-    <!-- Drawer -->
-    <div id="drawer" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/50" onclick="closeDrawer()"></div>
-        <div id="drawer-panel"
-            class="absolute right-0 h-full w-full max-w-md bg-white shadow-xl transform translate-x-full transition-transform duration-500 ease-in-out">
-            <div class="flex h-full flex-col overflow-y-auto py-6">
-                <div class="px-4 sm:px-6 flex items-start justify-between">
-                    <h2 class="text-base font-semibold text-gray-900">Alle Activiteiten</h2>
-                    <button onclick="closeDrawer()" type="button"
-                        class="ml-3 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none">
-                        <span class="sr-only">Close panel</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            class="h-6 w-6">
-                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="relative mt-6 flex-1 px-4 sm:px-6">
-                    <ul class="divide-y divide-gray-200">
-                        @foreach ($activitiesList as $activity)
-                        <li class="py-4">
-                            <x-activity-card :activity="$activity" />
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            <x-application-logo class="absolute bottom-4 left-4 h-5 w-auto fill-current text-gray-800 mt-2" />
-        </div>
-    </div>
+
 
     <!-- Modal -->
     <div id="enrollment-modal" class="fixed inset-0 hidden bg-gray-500/75 z-50 opacity-0 transition-opacity duration-300">
@@ -156,47 +107,22 @@
         </div>
     </div>
 
-    <!-- Drawer + Modal Scripts -->
+    <!-- Modal Scripts -->
     <script>
-        function openDrawer() {
-            const drawer = document.getElementById('drawer');
-            const panel = document.getElementById('drawer-panel');
-            drawer.classList.remove('hidden');
-
-            panel.offsetHeight;
-
-            panel.classList.remove('translate-x-full');
-        }
-
-        function closeDrawer() {
-            const panel = document.getElementById('drawer-panel');
-            const drawer = document.getElementById('drawer');
-            panel.classList.add('translate-x-full');
-            panel.addEventListener('transitionend', () => {
-                drawer.classList.add('hidden');
-            }, {
-                once: true
-            });
-        }
-
         function openModal(activityId) {
             const modal = document.getElementById('enrollment-modal');
             document.getElementById('activity-id').value = activityId;
             modal.classList.remove('hidden');
 
-            // Trigger fade-in and scale-in effect
             requestAnimationFrame(() => {
                 modal.classList.remove('opacity-0');
                 modal.querySelector('div').classList.remove('scale-95');
             });
-
-            closeDrawer();
         }
 
         function closeModal() {
             const modal = document.getElementById('enrollment-modal');
 
-            // Trigger fade-out and scale-out effect
             modal.classList.add('opacity-0');
             modal.querySelector('div').classList.add('scale-95');
 
