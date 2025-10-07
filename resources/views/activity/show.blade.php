@@ -35,11 +35,7 @@
         <div class="flex justify-center gap-6 pt-6">
             <a href="{{ route('activity.enroll', $activity->id) }}"
                 class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
-                Aanwezig
-            </a>
-            <a href="{{ route('activity.enroll', $activity->id) }}"
-                class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
-                Misschien
+                Aanmelden
             </a>
         </div>
     </div>
@@ -62,7 +58,7 @@
 
                             <span
                                 class="text-xs uppercase px-2 py-1 rounded-full 
-                                        {{ $participant['type'] === 'Gast' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
+                                                    {{ $participant['type'] === 'Gast' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
                                 {{ $participant['type'] }}
                             </span>
                         </li>
@@ -71,7 +67,7 @@
 
                 <!-- Pagination links -->
                 <div class="mt-6 flex justify-center">
-                  {{ $paginator->withQueryString()->links('pagination.tailwind-nl') }}
+                    {{ $paginator->withQueryString()->links('pagination.tailwind-nl') }}
                 </div>
             @else
                 <p class="py-2 text-gray-600">Nog geen deelnemers.</p>
