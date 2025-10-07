@@ -77,11 +77,11 @@
         <div
             class="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-6 w-full max-w-md scale-95 transition-transform duration-300">
             <div>
-                <h3 class="text-lg font-semibold text-gray-900">Schrijf je in voor deze activiteit</h3>
+                <h3 class="text-lg font-semibold text-gray-900">{{ $activity->name }}</h3>
+                <p class="text-xs text-gray-600 mb-2">{{ $activity->description }}</p>
+
                 <x-application-logo class="absolute bottom-4 left-4 h-5 w-auto fill-current text-gray-800" />
             </div>
-            <p class="text-xs text-gray-500 text-opacity-70 mb-4">Na het inschrijven zal je een bevestiging ontvangen
-                op je e-mailadres.</p>
             <form id="enrollment-form" method="POST" action="{{ route('guest.enrollment.store') }}">
                 @csrf
                 <input type="hidden" name="activity_id" id="activity-id">
@@ -91,12 +91,14 @@
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
                         required>
                 </div>
-                <div class="mb-4">
+                <div class="mb-2">
                     <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
                     <input type="email" name="email" id="email" placeholder="Vul hier je e-mailadres in."
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
                         required>
                 </div>
+                <p class="text-xs text-gray-500 text-opacity-70 mb-4">Na het inschrijven zal je een bevestiging ontvangen
+                    op je e-mailadres.</p>
                 <div class="flex justify-end">
                     <button type="button" onclick="closeModal()"
                         class="mr-2 rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-400">Annuleren</button>
