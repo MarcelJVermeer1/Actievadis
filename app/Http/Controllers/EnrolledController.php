@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Enrolled;
 use Illuminate\Http\Request;
 
-class EnrolledController extends Controller
-{
+class EnrolledController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index() {
         $userId = auth()->id();
 
         $enrollments = Enrolled::with('activity')
@@ -27,16 +25,14 @@ class EnrolledController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store($activityId)
-    {
+    public function store($activityId) {
         $userId = auth()->id();
 
         $alreadyEnrolled = Enrolled::where('user_id', $userId)
@@ -51,39 +47,33 @@ class EnrolledController extends Controller
             ]);
         }
 
-        return redirect()->route('activity.index');
-
+        return redirect()->route('activity.index')->with('success', 'Je bent ingeschreven voor deze activiteit, Tot dan!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(enrolled $enrolled)
-    {
+    public function show(enrolled $enrolled) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(enrolled $enrolled)
-    {
+    public function edit(enrolled $enrolled) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, enrolled $enrolled)
-    {
-
+    public function update(Request $request, enrolled $enrolled) {
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($activityId)
-    {
+    public function destroy($activityId) {
         $userId = auth()->id();
 
         Enrolled::where('user_id', $userId)
