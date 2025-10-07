@@ -8,10 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class ActivityController extends Controller
-{
-  public function index()
-  {
+class ActivityController extends Controller {
+  public function index() {
     $activities = Activity::all();
 
     $enrollments = Enrolled::with('activity')
@@ -28,13 +26,11 @@ class ActivityController extends Controller
     return view('activity.index', compact('activities', 'enrolledActivities', 'availableActivities', 'oldActivities'));
   }
 
-  public function create(Request $request)
-  {
+  public function create(Request $request) {
     return view('admin.createActivity');
   }
 
-  public function store(Request $request)
-  {
+  public function store(Request $request) {
     $request->merge(['costs' => str_replace(',', '.', $request->input('costs'))]);
 
     $validated = $request->validate([
@@ -52,19 +48,25 @@ class ActivityController extends Controller
 
     Activity::create($validated);
 
-    return redirect()->route('dashboard');
+    return redirect()->route('dashboard')->with('success', 'Activiteit succesvol aangemaakt!');
   }
 
-  public function enrolled()
-  {
+  public function enrolled() {
     $enrolledActivities = auth()->user()->enrolledActivities;
 
     return view('enrolled.index', compact('enrolledActivities'));
   }
 
-  public function show($id)
-  {
+  public function show($id) {
     $activity = Activity::findOrFail($id);
     return view('activity.show', compact('activity'));
+  }
+
+  public function getActivitiesList() {
+    $activitiesList = Activity::where('starttime', '>=', now())
+      ->orderBy('starttime', 'asc')
+      ->get();
+
+    return view('welcome', compact('activitiesList'));
   }
 }
