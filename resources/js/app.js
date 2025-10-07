@@ -7,7 +7,7 @@ toastr.options = {
     closeButton: false,
     progressBar: true,
     newestOnTop: true,
-    positionClass: "toast-top-right",
+    positionClass: "toast-bottom-right",
     timeOut: "2500", // 2.5 seconds
     extendedTimeOut: "0",
 };
