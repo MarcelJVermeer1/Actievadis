@@ -1,7 +1,8 @@
 @forelse($activities as $activity)
     <li
-        class="bg-gray-50 rounded-lg shadow transition transform hover:-translate-y-1 hover:shadow-lg hover:bg-blue-50 flex justify-between items-center">
-        <a href="{{ route('activity.show', $activity['id']) }}"
+        class="bg-gray-50 rounded-lg shadow transition transform hover:-translate-y-1 hover:shadow-lg hover:bg-blue-50 flex justify-between items-center"
+        onclick="window.location='{{ route('activity.show', $activity['id']) }}'">
+        <a 
             class="block p-5 flex flex-col sm:flex-row sm:items-center justify-between">
             <div>
                 <span class="text-gray-800 font-semibold text-lg">{{ $activity['name'] }}</span>
