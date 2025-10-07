@@ -131,6 +131,7 @@
             </div>
             <p class="text-xs text-gray-500 text-opacity-70 mb-4">Na het inschrijven zal je een bevestiging ontvangen
                 op je e-mailadres.</p>
+            <div id="activity-description" class="text-sm text-gray-700 mb-4"></div>
             <form id="enrollment-form" method="POST" action="{{ route('guest.enrollment.store') }}">
                 @csrf
                 <input type="hidden" name="activity_id" id="activity-id">
@@ -157,7 +158,20 @@
     </div>
 
     <!-- Drawer + Modal Scripts -->
+    <script id="activity-data" type="application/json">
+        @json($activitiesList->pluck('description', 'id'))
+    </script>
     <script>
+        // Map of activity id -> description so modal can show full description for guest signups
+        const activityDescriptions = (function() {
+            const el = document.getElementById('activity-data');
+            try {
+                return el ? JSON.parse(el.textContent) : {};
+            } catch (e) {
+                return {};
+            }
+        })();
+
         function openDrawer() {
             const drawer = document.getElementById('drawer');
             const panel = document.getElementById('drawer-panel');
@@ -182,6 +196,13 @@
         function openModal(activityId) {
             const modal = document.getElementById('enrollment-modal');
             document.getElementById('activity-id').value = activityId;
+            // Populate the activity description (preserve newlines)
+            const desc = activityDescriptions && activityDescriptions[activityId] ? activityDescriptions[activityId] : '';
+            const descDiv = document.getElementById('activity-description');
+            if (descDiv) {
+                // convert newlines to <br> for basic formatting
+                descDiv.innerHTML = desc ? desc.replace(/\n/g, '<br>') : '';
+            }
             modal.classList.remove('hidden');
 
             // Trigger fade-in and scale-in effect
@@ -202,6 +223,11 @@
 
             modal.addEventListener('transitionend', () => {
                 modal.classList.add('hidden');
+                // clear description when closed
+                const descDiv = document.getElementById('activity-description');
+                if (descDiv) {
+                    descDiv.innerHTML = '';
+                }
             }, {
                 once: true
             });
