@@ -42,6 +42,6 @@ class RegisteredUserController extends Controller {
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false))->with('success', 'Je bent geregistreerd en ingelogd!');
+        return redirect(route('activity.index'))->with('success', 'Je bent geregistreerd en ingelogd!');
     }
 }

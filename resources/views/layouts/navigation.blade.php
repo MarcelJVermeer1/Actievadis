@@ -16,15 +16,15 @@
             {{ __('Activiteiten Lijst') }}
           </x-nav-link>
           @if(auth()->check() && auth()->user()->admin)
-            <x-nav-link :href="route('activities.create')" :active="request()->routeIs('activities.create')">
-              {{ __('Activiteiten Aanmaken') }}
-            </x-nav-link>
+          <x-nav-link :href="route('activities.create')" :active="request()->routeIs('activities.create')">
+            {{ __('Activiteiten Aanmaken') }}
+          </x-nav-link>
           @endif
-          @if (Auth::user() && Auth::user()->is_admin)
+          <!-- @if (Auth::user() && Auth::user()->is_admin)
             <x-nav-link :href="route('usermanagement')" :active="request()->routeIs('usermanagement')">
               {{ __('Gebruikersbeheer') }}
             </x-nav-link>
-          @endif
+          @endif -->
         </div>
       </div>
 
