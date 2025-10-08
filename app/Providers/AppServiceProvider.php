@@ -22,13 +22,14 @@ class AppServiceProvider extends ServiceProvider {
     public function boot() {
         Schema::defaultStringLength(191);
 
-        // just need to change the placeholders..
         VerifyEmail::toMailUsing(function ($notifiable, $verificationUrl) {
             return (new MailMessage)
-                ->subject(__('mail.verify_subject'))
-                ->line(__('mail.verify_line'))
-                ->action(__('mail.verify_action'), $verificationUrl)
-                ->line(__('mail.verify_no_action'));
+                ->subject(__('Verificatie Account'))
+                ->greeting(__('Hallo, ' . $notifiable->name))
+                ->line(__('U heeft een verificatie-e-mail aangevraagd. Klik op de knop hieronder om uw e-mailadres te verifiëren.'))
+                ->action(__('Verifieer E-mailadres'), $verificationUrl)
+                ->salutation(__('Met vriendelijke groet,') . "\n" . config('app.name'))
+                ->line(__('Als de knop niet werkt, kopieer en plak de volgende link in uw browser:') . "\n" . $verificationUrl);
         });
 
         ResetPassword::toMailUsing(function ($notifiable, $token) {
@@ -38,13 +39,12 @@ class AppServiceProvider extends ServiceProvider {
             ], false));
 
             return (new MailMessage)
-                ->subject(__('mail.reset_subject'))
-                ->line(__('mail.reset_line'))
-                ->action(__('mail.reset_action'), $url)
-                ->line(__('mail.reset_expires', [
-                    'count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire'),
-                ]))
-                ->line(__('mail.reset_no_action'));
+                ->subject(__('Wachtwoord Vergeten'))
+                ->greeting(__('Hallo, ' . $notifiable->name))
+                ->line(__('U heeft aangegeven dat u uw wachtwoord bent vergeten. Klik op de knop hieronder om uw wachtwoord opnieuw in te stellen.'))
+                ->action(__('Opnieuw Instellen'), $url)
+                ->salutation(__('Met vriendelijke groet,') . "\n" . config('app.name'))
+                ->line(__('Als de knop niet werkt, kopieer en plak de volgende link in uw browser:') . "\n" . $url);
         });
     }
 }
