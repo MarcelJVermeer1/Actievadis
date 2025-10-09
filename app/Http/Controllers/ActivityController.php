@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\EnrollmentVisibility;
 use App\Models\Activity;
 use App\Models\Enrolled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class ActivityController extends Controller {
-  public function index() {
+class ActivityController extends Controller
+{
+  public function index()
+  {
     $activities = Activity::all();
 
     $enrollments = Enrolled::with('activity')
@@ -27,7 +32,8 @@ class ActivityController extends Controller {
     return view('activity.index', compact('activities', 'enrolledActivities', 'availableActivities', 'oldActivities'));
   }
 
-  public function create(Request $request) {
+  public function create(Request $request)
+  {
     return view('admin.createActivity');
   }
 
@@ -46,6 +52,8 @@ public function store(Request $request)
         'endtime'      => 'required|date|after:starttime',
         'costs'        => 'required|numeric',
         'min'          => 'nullable|integer|min:0',
+        'max_capacity' => 'required|integer|min:1',
+        'visibility' => 'required',
         'necessities'  => 'nullable|string|max:255',
         'image'        => 'nullable|image|max:16384', // 16 MB max
     ]);
@@ -62,6 +70,8 @@ public function store(Request $request)
         // Store binary data (for MEDIUMBLOB or LONGBLOB)
         $validated['image'] = $img->toString();
     }
+    
+     Log::info('Activity store request data:', $request->all());
 
     // Save the activity
     Activity::create($validated);
@@ -77,15 +87,66 @@ public function store(Request $request)
     return view('enrolled.index', compact('enrolledActivities'));
   }
 
-  public function show($id) {
+  public function show($id)
+  {
     $activity = Activity::findOrFail($id);
-    return view('activity.show', compact('activity'));
+    $user = Auth::user();
+
+    $canViewEnrollments = false;
+
+    if ($activity->visibility === EnrollmentVisibility::Admin->value) {
+      $canViewEnrollments = $user && $user->is_admin;
+    } elseif ($activity->visibility === EnrollmentVisibility::User->value) {
+      $canViewEnrollments = $user !== null;
+    } elseif ($activity->visibility === EnrollmentVisibility::Full->value) {
+      $canViewEnrollments = true;
+    }
+
+    $users = $canViewEnrollments ? $activity->users : collect();
+    $guests = $canViewEnrollments ? $activity->guestUsers : collect();
+
+    $amountOfEnrollments = $users->count() + $guests->count();
+
+    $combined = $users->map(function ($user) {
+      return [
+        'type' => 'Medewerker',
+        'name' => $user->name,
+        'email' => $user->email,
+      ];
+    })->merge(
+      $guests->map(function ($guest) {
+        return [
+          'type' => 'Gast',
+          'name' => $guest->pivot->name,
+          'email' => $guest->pivot->email,
+        ];
+      })
+    );
+
+    $page = request()->get('page', 1);
+    $perPage = 10;
+    $paginator = new LengthAwarePaginator(
+      $combined->forPage($page, $perPage),
+      $combined->count(),
+      $perPage,
+      $page,
+      ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+    return view('activity.show', compact(
+      'activity',
+      'paginator',
+      'amountOfEnrollments',
+      'canViewEnrollments'
+    ));
   }
 
-  public function getActivitiesList() {
+  public function getActivitiesList()
+  {
     $activitiesList = Activity::where('starttime', '>=', now())
       ->orderBy('starttime', 'asc')
       ->get();
+
 
     return view('welcome', compact('activitiesList'));
   }

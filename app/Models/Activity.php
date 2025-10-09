@@ -16,6 +16,8 @@ class Activity extends Model
     'endtime',
     'costs',
     'min',
+    'max_capacity',
+    'visibility',
     'necessities',
     'image',
   ];
@@ -31,9 +33,18 @@ class Activity extends Model
     });
   }
 
-  public function users()
-  {
-    return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
-      ->withTimestamps();
-  }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function guestUsers()
+    {
+    return $this->belongsToMany(Activity::class, 'guest_enrollments')
+                ->withPivot('id', 'created_at', 'updated_at', 'name', 'email');
+    }
+
+
+    
 }
