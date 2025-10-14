@@ -47,11 +47,10 @@ class EnrolledController extends Controller
             Enrolled::create([
                 'user_id' => $userId,
                 'activity_id' => $activityId,
-                // 'status' => '',
             ]);
         }
 
-        return redirect()->route('activity.index');
+        return redirect()->back()->with('success', 'Je bent ingeschreven voor deze activiteit.');
 
     }
 
@@ -89,8 +88,7 @@ class EnrolledController extends Controller
         Enrolled::where('user_id', $userId)
             ->where('activity_id', $activityId)
             ->delete();
-
-        return redirect()->route('activity.index')
-            ->with('success', 'Je bent afgemeld voor deze activiteit.');
+            return redirect()->back()
+                ->with('success', 'Je bent afgemeld voor deze activiteit.');
     }
 }
