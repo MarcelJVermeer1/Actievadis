@@ -7,21 +7,44 @@ use Illuminate\Support\Str;
 
 class Activity extends Model
 {
-    protected $fillable = ['name', 'location', 'food', 'description', 'starttime', 'endtime', 'costs'];
+  protected $fillable = [
+    'name',
+    'location',
+    'food',
+    'description',
+    'starttime',
+    'endtime',
+    'costs',
+    'min',
+    'max_capacity',
+    'visibility',
+    'necessities',
+    'image',
+  ];
 
-    public $incrementing = false;
-    public static function boot() {
-      
-      parent::boot();
-      
-      static::creating(function ($model) {
-        $model->id = Str::uuid();
-      });
-    }
+  public $incrementing = false;
+  public static function boot()
+  {
+
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->id = Str::uuid();
+    });
+  }
 
     public function users()
     {
         return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
             ->withTimestamps();
     }
+
+    public function guestUsers()
+    {
+    return $this->belongsToMany(Activity::class, 'guest_enrollments')
+                ->withPivot('id', 'created_at', 'updated_at', 'name', 'email');
+    }
+
+
+    
 }
