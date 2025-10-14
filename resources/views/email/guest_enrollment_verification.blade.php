@@ -44,7 +44,7 @@
                     </tr>
                     <tr>
                         <td align="center" style="padding-top: 20px; color: #a0aec0; font-size: 12px;">
-                            &copy; {{ date('Y') }} {{ config('app.name') }}. Alle rechten voorbehouden.
+                            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
                         </td>
                     </tr>
                 </table>

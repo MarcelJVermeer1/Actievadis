@@ -21,11 +21,16 @@ class AuthenticatedSessionController extends Controller {
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse {
-        $request->authenticate();
+        try {
+            $request->authenticate();
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Je bent ingelogd!');
+            return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Je bent ingelogd!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput($request->only('email'))
+                ->with('error', 'Inloggen mislukt. Controleer uw gegevens en probeer het opnieuw.');
+        }
     }
 
     /**

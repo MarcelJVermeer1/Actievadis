@@ -18,7 +18,7 @@
                     </tr>
                     <tr>
                         <td style="color: #2d3748; font-size: 16px; line-height: 1.6;">
-                            <p>Hallo {{ $user->name }},</p>
+                            <p style="color: #3d4852; font-size: 18px; font-weight: bold; margin-top: 0; text-align: left;">Hallo {{ $user->name }},</p>
                             <p>Bedankt voor je registratie! Bevestig je e-mailadres om je aanmelding te voltooien.</p>
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
                     </tr>
                     <tr>
                         <td align="center" style="padding-top: 20px; color: #a0aec0; font-size: 12px;">
-                            &copy; {{ date('Y') }} {{ config('app.name') }}. Alle rechten voorbehouden.
+                            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
                         </td>
                     </tr>
                 </table>
