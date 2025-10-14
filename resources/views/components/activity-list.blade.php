@@ -1,9 +1,7 @@
 @forelse($activities as $activity)
-    <li
-        class="bg-gray-50 rounded-lg shadow transition transform hover:-translate-y-1 hover:shadow-lg hover:bg-blue-50 flex justify-between items-center"
+    <li class="bg-gray-50 rounded-lg shadow transition transform hover:-translate-y-1 hover:shadow-lg hover:bg-blue-50 flex justify-between items-center"
         onclick="window.location='{{ route('activity.show', $activity['id']) }}'">
-        <a 
-            class="block p-5 flex flex-col sm:flex-row sm:items-center justify-between">
+        <a class="block p-5 flex flex-col sm:flex-row sm:items-center justify-between">
 
             <div>
                 <span class="text-gray-800 font-semibold text-lg">{{ $activity['name'] }}</span>
@@ -12,6 +10,45 @@
                 </div>
                 <div class="text-gray-500 text-xs mt-1">
                     Locatie: {{ $activity['location'] ?? 'Onbekend' }}
+                </div>
+
+
+                {{-- ✅ Minimaal aantal deelnemers --}}
+                @php
+                    $min = $activity->min ?? 0;
+                    $max = $activity->max_capacity ?? 0;
+                    $enrolled = $activity->enrolled_count ?? 0;
+                    $neededForMin = max($min - $enrolled, 0);
+                    $available = max($max - $enrolled, 0);
+                @endphp
+
+                <div class="text-xs mt-1
+                                    @if ($neededForMin > 0)
+                                        text-red-600
+                                    @else
+                                        text-green-600
+                                    @endif">
+                    Minimaal nodig: {{ $min }}
+                    @if ($neededForMin > 0)
+                        (nog {{ $neededForMin }} nodig)
+                    @else
+                        ✅ Minimaal bereikt
+                    @endif
+                </div>
+
+                {{-- ✅ Beschikbare plekken --}}
+                <div class="text-xs mt-1
+                                    @if ($available > 0)
+                                        text-gray-500
+                                    @else
+                                        text-red-600 font-semibold
+                                    @endif">
+                    Beschikbare plekken:
+                    @if ($available > 0)
+                        {{ $available }}
+                    @else
+                        ❌ Vol
+                    @endif
                 </div>
 
             </div>
