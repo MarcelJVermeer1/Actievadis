@@ -162,6 +162,8 @@ class ActivityController extends Controller
     $page = request()->get('page', 1);
     $perPage = 10;
 
+    $amountOfEnrollments = $users->count() + $guests->count();
+
     $paginator = new LengthAwarePaginator(
       $combined->forPage($page, $perPage),
       $combined->count(),
