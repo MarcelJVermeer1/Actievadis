@@ -27,12 +27,12 @@
 
         <a href="?{{ $param }}=date_asc"
             class="block px-4 py-2 hover:bg-gray-100 {{ $current === 'date_asc' ? 'bg-blue-100 font-semibold' : '' }}">
-            ⏳ Af oplopen
+            ⏳ Aflopend
         </a>
 
         <a href="?{{ $param }}=date_desc"
             class="block px-4 py-2 hover:bg-gray-100 {{ $current === 'date_desc' ? 'bg-blue-100 font-semibold' : '' }}">
-            🕒 Oploden
+            🕒 Oplopend
         </a>
     </div>
 </div>
