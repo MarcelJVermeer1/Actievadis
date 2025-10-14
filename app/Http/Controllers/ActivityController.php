@@ -156,6 +156,8 @@ class ActivityController extends Controller
         ];
       })
     );
+    
+    $amountOfEnrollments = $users->count() + $guests->count();
 
     $page = request()->get('page', 1);
     $perPage = 10;

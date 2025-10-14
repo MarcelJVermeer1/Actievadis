@@ -33,13 +33,6 @@ class Activity extends Model
     });
   }
 
-  public function users()
-  {
-    return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
-      ->withTimestamps();
-  }
-
-
      public function getImageSrcAttribute()
     {
         return $this->image
@@ -47,6 +40,11 @@ class Activity extends Model
             : null;
     }
 
+  public function users()
+  {
+    return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
+      ->withTimestamps();
+  }
 
   public function guestUsers()
   {
