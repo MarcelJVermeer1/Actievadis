@@ -29,9 +29,11 @@ Route::middleware('auth')->group(function () {
 Route::middleware('admin')->controller(ActivityController::class)->group(function () {
     Route::get('/createActivities', 'create')->name('activities.create');
     Route::post('/store', 'store')->name('activities.store');
+    Route::get('/activities/{id}/edit', 'edit')->name('activities.edit');
+    Route::put('/activities/{id}', 'update')->name('activities.update');
 });
 Route::middleware('auth')->controller(EnrolledController::class)->group(function () {
-    Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
+    Route::get('/activity/enroll/{activity}', 'store')->name('activity.enroll');
     Route::get('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
 });
 Route::post('/guest-enrollment', [GuestEnrollmentController::class, 'store'])->name('guest.enrollment.store');

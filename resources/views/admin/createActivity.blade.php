@@ -1,6 +1,6 @@
 <!-- resources/views/activities/create.blade.php -->
 @php
-use App\EnrollmentVisibility;
+  use App\EnrollmentVisibility;
 @endphp
 
 <x-app-layout>
@@ -27,19 +27,19 @@ use App\EnrollmentVisibility;
           value="{{ old('location') }}" required>
       </div>
 
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-700">Beschrijving</label>
+        <textarea name="description" id="description" rows="4"
+          class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
+      </div>
+
       <!-- Food (boolean) -->
       <div class="flex items-center">
         <input type="hidden" name="food" value="0">
         <input type="checkbox" name="food" id="food" value="1" class="h-4 w-4 text-indigo-600 border-gray-300 rounded"
           {{ old('food') ? 'checked' : '' }}>
         <label for="food" class="ml-2 block text-sm text-gray-700">Inclusief eten</label>
-      </div>
-
-      <!-- Description -->
-      <div>
-        <label for="description" class="block text-sm font-medium text-gray-700">Beschrijving</label>
-        <textarea name="description" id="description" rows="4"
-          class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
       </div>
 
       <!-- Start Time -->
@@ -73,6 +73,16 @@ use App\EnrollmentVisibility;
           class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
       </div>
 
+      <!-- max -->
+      <div>
+        <label for="max_capacity" class="block text-sm font-medium text-gray-700">
+          Maximum aanmeldingen
+        </label>
+        <input type="number" name="max_capacity" id="max_capacity" inputmode="numeric" pattern="^\d+(,)?$"
+          class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          placeholder="1" min="1" value="{{ old('max_capacity') }}" required>
+      </div>
+
       <!-- Benodigdheden -->
       <div>
         <label for="necessities" class="block text-sm font-medium text-gray-700">Benodigdheden</label>
@@ -88,17 +98,9 @@ use App\EnrollmentVisibility;
           class="mt-1 block w-full text-gray-700 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-indigo-500">
       </div>
 
-<!-- IMPORTANT!!! Show old values -->
+      <!-- IMPORTANT!!! Show old values -->
 
-      <!-- max -->
-      <div>
-        <label for="max_capacity" class="block text-sm font-medium text-gray-700">
-          Maximum aanmeldingen
-        </label>
-        <input type="number" name="max_capacity" id="max_capacity" inputmode="numeric" pattern="^\d+(,)?$"
-          class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          placeholder="1" min="1" value="{{ old('max_capacity') }}" required>
-      </div>
+
 
       <!-- Visibility -->
       <div class="mt-4">
@@ -108,7 +110,7 @@ use App\EnrollmentVisibility;
         <select name="visibility" id="visibility"
           class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           required>
-            @foreach (EnrollmentVisibility::cases() as $visibility)
+          @foreach (EnrollmentVisibility::cases() as $visibility)
             <option value="{{ $visibility->value }}" {{ old('visibility') === $visibility->value ? 'selected' : '' }}>
               {{ ucfirst($visibility->value) }}
             </option>
