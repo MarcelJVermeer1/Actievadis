@@ -7,17 +7,31 @@ use Illuminate\Support\Str;
 
 class Activity extends Model
 {
-    protected $fillable = ['name', 'location', 'food', 'description', 'starttime', 'endtime', 'costs', 'max_capacity', 'visibility'];
+  protected $fillable = [
+    'name',
+    'location',
+    'food',
+    'description',
+    'starttime',
+    'endtime',
+    'costs',
+    'min',
+    'max_capacity',
+    'visibility',
+    'necessities',
+    'image',
+  ];
 
-    public $incrementing = false;
-    public static function boot() {
-      
-      parent::boot();
-      
-      static::creating(function ($model) {
-        $model->id = Str::uuid();
-      });
-    }
+  public $incrementing = false;
+  public static function boot()
+  {
+
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->id = Str::uuid();
+    });
+  }
 
     public function users()
     {
