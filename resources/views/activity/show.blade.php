@@ -32,13 +32,29 @@
     </div>
 
 
-    <div class="flex justify-center gap-6 pt-6">
-      <a href="{{ route('activity.enroll', $activity->id) }}"
-        class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
-        Aanmelden
-      </a>
+        <div class="flex justify-center gap-6 pt-6">
+            @php
+                $userIsEnrolled = $activity->users->contains('id', Auth::id());
+            @endphp
+
+            @if($userIsEnrolled)
+                <a href="{{ route('enrolled.destroy', $activity->id) }}"
+                    class="px-8 py-3  bg-red-600 text-white hover:bg-red-700 transition text-lg font-semibold rounded-lg">
+                    Afmelden
+                </a>
+            @elseif($activity->max_capacity <= $amountOfEnrollments)
+                <a
+                    class="px-8 py-3 border border-orange-500 text-white bg-orange-600 rounded-lg font-semibold text-lg cursor-not-allowed">
+                    Vol
+                </a>
+            @else
+                <a href="{{ route('activity.enroll', $activity->id) }}"
+                    class="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg font-semibold text-lg">
+                    Aanmelden
+                </a>
+            @endif
+        </div>
     </div>
-  </div>
 
 
   @if($canViewEnrollments)
@@ -47,23 +63,23 @@
         Aanmeldingen {{ $amountOfEnrollments }}/{{ $activity->max_capacity }}
       </h3>
 
-      @if($paginator->count())
-        <ul class="mb-6 divide-y divide-gray-200">
-          @foreach ($paginator as $participant)
-            <li class="py-3 flex justify-between items-center">
-              <div>
-                <span class="font-semibold">{{ $participant['name'] }}</span><br>
-                <span class="text-gray-500 text-sm">{{ $participant['email'] }}</span>
-              </div>
+            @if($paginator->count())
+                <ul class="mb-6 divide-y divide-gray-200">
+                    @foreach ($paginator as $participant)
+                        <li class="py-3 flex justify-between items-center">
+                            <div>
+                                <span class="font-semibold">{{ $participant->name }}</span><br>
+                                <span class="text-gray-500 text-sm">{{ $participant->email }}</span>
+                            </div>
 
-              <span
-                class="text-xs uppercase px-2 py-1 rounded-full 
-                                                          {{ $participant['type'] === 'Gast' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
-                {{ $participant['type'] }}
-              </span>
-            </li>
-          @endforeach
-        </ul>
+                            <span
+                                class="text-xs uppercase px-2 py-1 rounded-full 
+                                           {{ $participant->type === 'Gast' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
+                                {{ $participant->type }}
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
 
         <!-- Pagination links -->
         <div class="mt-6 flex justify-center">

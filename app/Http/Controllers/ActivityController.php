@@ -154,26 +154,31 @@ class ActivityController extends Controller
     $users = $canViewEnrollments ? $activity->users : collect();
     $guests = $canViewEnrollments ? $activity->guestUsers : collect();
 
-    $amountOfEnrollments = $users->count() + $guests->count();
+    // Convert to plain collections
+    $users = collect($users->all());
+    $guests = collect($guests->all());
 
     $combined = $users->map(function ($user) {
-      return [
+      return (object) [
         'type' => 'Medewerker',
         'name' => $user->name,
         'email' => $user->email,
       ];
     })->merge(
-        $guests->map(function ($guest) {
-          return [
-            'type' => 'Gast',
-            'name' => $guest->pivot->name,
-            'email' => $guest->pivot->email,
-          ];
-        })
-      );
+      $guests->map(function ($guest) {
+        return (object) [
+          'type' => 'Gast',
+          'name' => $guest->pivot->name,
+          'email' => $guest->pivot->email,
+        ];
+      })
+    );
+    
+    $amountOfEnrollments = $users->count() + $guests->count();
 
     $page = request()->get('page', 1);
     $perPage = 10;
+
     $paginator = new LengthAwarePaginator(
       $combined->forPage($page, $perPage),
       $combined->count(),
