@@ -31,6 +31,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['admin', 'auth', 'verified'])->controller(ActivityController::class)->group(function () {
     Route::get('/createActivities', 'create')->name('activities.create');
     Route::post('/store', 'store')->name('activities.store');
+    Route::get('/activities/{id}/edit', 'edit')->name('activities.edit');
+    Route::put('/activities/{id}', 'update')->name('activities.update');
 });
 Route::middleware(['auth', 'verified'])->controller(EnrolledController::class)->group(function () {
     Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
