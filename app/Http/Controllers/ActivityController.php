@@ -16,20 +16,52 @@ class ActivityController extends Controller
 {
   public function index()
   {
-    $activities = Activity::all();
+    $sortEnrolled = request('sort_enrolled', 'date_asc');
+    $sortAvailable = request('sort_available', 'date_asc');
+    $sortOld = request('sort_old', 'date_asc');
 
-    $enrollments = Enrolled::with('activity')
-      ->where('user_id', Auth::id())
-      ->get();
+    function getOrder($sort)
+    {
+      return match ($sort) {
+        'az' => ['name', 'asc'],
+        'za' => ['name', 'desc'],
+        'date_desc' => ['starttime', 'desc'],
+        default => ['starttime', 'asc'],
+      };
+    }
 
-    // Extra variable: oldActivities (activities that have ended)
-    $oldActivities = $activities->where('starttime', '<', now());
+    [$colE, $dirE] = getOrder($sortEnrolled);
+    [$colA, $dirA] = getOrder($sortAvailable);
+    [$colO, $dirO] = getOrder($sortOld);
 
+    $enrolledIds = Enrolled::where('user_id', Auth::id())->pluck('activity_id');
 
-    $enrolledActivities = $enrollments->pluck('activity')->where('starttime', '>=', now());
-    $availableActivities = $activities->diff($enrolledActivities)->where('starttime', '>=', now());
+    $enrolledActivities = Activity::withCount('enrolled')
+      ->whereIn('id', $enrolledIds)
+      ->where('starttime', '>=', now())
+      ->orderBy($colE, $dirE)
+      ->paginate(3, ['*'], 'enrolled_page')
+      ->appends(request()->query());
 
-    return view('activity.index', compact('activities', 'enrolledActivities', 'availableActivities', 'oldActivities'));
+    $availableActivities = Activity::withCount('enrolled') // ✅ ADDED
+      ->whereNotIn('id', $enrolledIds)
+      ->where('starttime', '>=', now())
+      ->orderBy($colA, $dirA)
+      ->paginate(3, ['*'], 'available_page')
+      ->appends(request()->query());
+
+    $oldActivities = Activity::withCount('enrolled') // ✅ ADDED
+      ->whereIn('id', $enrolledIds)
+      ->where('endtime', '<', now())
+      ->orderBy($colO, $dirO)
+      ->paginate(3, ['*'], 'old_page')
+      ->appends(request()->query());
+
+    return view('activity.index', compact(
+      'enrolledActivities',
+      'availableActivities',
+      'oldActivities'
+    ));
   }
 
   public function create(Request $request)
@@ -56,6 +88,18 @@ class ActivityController extends Controller
       'visibility' => 'required',
       'necessities' => 'nullable|string|max:255',
       'image' => 'nullable|image|max:16384', // 16 MB max
+      'name' => 'required|string|max:255',
+      'location' => 'required|string|max:255',
+      'food' => 'boolean',
+      'description' => 'required|min:5|max:1000',
+      'starttime' => 'required|date',
+      'endtime' => 'required|date|after:starttime',
+      'costs' => 'required|numeric',
+      'min' => 'nullable|integer|min:0',
+      'max_capacity' => 'required|integer|min:1',
+      'visibility' => 'required',
+      'necessities' => 'nullable|string|max:255',
+      'image' => 'nullable|image|max:16384', // 16 MB max
     ]);
 
     // ✅ Create an image manager with the GD driver (v3 syntax)
@@ -66,17 +110,21 @@ class ActivityController extends Controller
       $img = $manager->read($request->file('image')->getRealPath())
         ->scaleDown(1200)     // Resize while maintaining aspect ratio
         ->toJpeg(75);         // Compress to ~75% quality
+      $img = $manager->read($request->file('image')->getRealPath())
+        ->scaleDown(1200)     // Resize while maintaining aspect ratio
+        ->toJpeg(75);         // Compress to ~75% quality
 
+      // Store binary data (for MEDIUMBLOB or LONGBLOB)
+      $validated['image'] = $img->toString();
       // Store binary data (for MEDIUMBLOB or LONGBLOB)
       $validated['image'] = $img->toString();
     }
 
-    Log::info('Activity store request data:', $request->all());
 
     // Save the activity
     Activity::create($validated);
 
-    return redirect()->route('dashboard')
+    return redirect()->route('activity.index')
       ->with('success', 'Activiteit succesvol aangemaakt!');
   }
 
@@ -174,10 +222,10 @@ class ActivityController extends Controller
       })
     );
     
-    $amountOfEnrollments = $users->count() + $guests->count();
-
     $page = request()->get('page', 1);
     $perPage = 10;
+
+    $amountOfEnrollments = $users->count() + $guests->count();
 
     $paginator = new LengthAwarePaginator(
       $combined->forPage($page, $perPage),

@@ -14,27 +14,31 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/usermanagement', [UserManagementController::class, 'index'])->middleware(['auth', 'verified'])->name('usermanagement');
-Route::delete('/usermanagement/{user}', [UserManagementController::class, 'destroy'])->middleware(['auth', 'verified'])->name('usermanagement.destroy');
+Route::middleware(['admin', 'auth', 'verified'])->group(function () {
+    Route::get('/usermanagement', [UserManagementController::class, 'index'])->name('usermanagement');
+    Route::delete('/usermanagement/{user}', [UserManagementController::class, 'destroy'])->name('usermanagement.destroy');
+});
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/activity', ActivityController::class)->names('activity');
     Route::get('/enrolled', [EnrolledController::class, 'index'])->name('activity.enrolled');
 });
-Route::middleware('admin')->controller(ActivityController::class)->group(function () {
+Route::middleware(['admin', 'auth', 'verified'])->controller(ActivityController::class)->group(function () {
     Route::get('/createActivities', 'create')->name('activities.create');
     Route::post('/store', 'store')->name('activities.store');
     Route::get('/activities/{id}/edit', 'edit')->name('activities.edit');
     Route::put('/activities/{id}', 'update')->name('activities.update');
 });
-Route::middleware('auth')->controller(EnrolledController::class)->group(function () {
-    Route::get('/activity/enroll/{activity}', 'store')->name('activity.enroll');
+Route::middleware(['auth', 'verified'])->controller(EnrolledController::class)->group(function () {
+    Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
     Route::get('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
 });
 Route::post('/guest-enrollment', [GuestEnrollmentController::class, 'store'])->name('guest.enrollment.store');
+Route::get('/guest-enrollment/verify/{id}', [GuestEnrollmentController::class, 'verify'])->name('guest.enrollment.verify');
+
 require __DIR__ . '/auth.php';

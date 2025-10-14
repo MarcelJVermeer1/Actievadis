@@ -33,18 +33,30 @@ class Activity extends Model
     });
   }
 
-    public function users()
+     public function getImageSrcAttribute()
     {
-        return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
-            ->withTimestamps();
+        return $this->image
+            ? 'data:image/jpeg;base64,' . base64_encode($this->image)
+            : null;
     }
 
-    public function guestUsers()
-    {
+  public function users()
+  {
+    return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
+      ->withTimestamps();
+  }
+
+  public function guestUsers()
+  {
     return $this->belongsToMany(Activity::class, 'guest_enrollments')
-                ->withPivot('id', 'created_at', 'updated_at', 'name', 'email');
-    }
+      ->withPivot('id', 'created_at', 'updated_at', 'name', 'email');
+  }
+
+  public function enrolled()
+  {
+    return $this->hasMany(Enrolled::class, 'activity_id');
+  }
 
 
-    
+
 }
