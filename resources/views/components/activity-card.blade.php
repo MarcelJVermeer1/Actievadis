@@ -1,7 +1,11 @@
 @props(['activity'])
-
+@php
+    use App\EnrollmentVisibility;
+@endphp
 <div class="bg-white rounded-lg shadow-md overflow-hidden p-4">
-    <h3 class="text-lg font-semibold text-gray-800">{{ \Illuminate\Support\Str::limit($activity->name, 25) }}</h3>
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-gray-800">{{ \Illuminate\Support\Str::limit($activity->name, 25) }}</h3>
+    </div>
     <p class="text-sm text-gray-600 mt-1">{{ \Illuminate\Support\Str::limit($activity->description, 50) }}</p>
     <p class="text-xs text-gray-500 mt-1">{{ $activity->location ?? 'Onbekend' }}</p>
     <div class="flex justify-between items-center">
