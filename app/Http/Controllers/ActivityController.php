@@ -108,7 +108,7 @@ class ActivityController extends Controller
     // Save the activity
     Activity::create($validated);
 
-    return redirect()->route('dashboard')
+    return redirect()->route('activity.index')
       ->with('success', 'Activiteit succesvol aangemaakt!');
   }
 
