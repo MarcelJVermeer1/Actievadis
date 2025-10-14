@@ -32,6 +32,6 @@ class ConfirmablePasswordController extends Controller {
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Je wachtwoord is bevestigd.');
+        return redirect()->intended(route('activity.index', absolute: false))->with('success', 'Je wachtwoord is bevestigd.');
     }
 }

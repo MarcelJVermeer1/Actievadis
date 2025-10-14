@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
-class RegisteredUserController extends Controller {
+class RegisteredUserController extends Controller
+{
     /**
      * Display the registration view.
      */
-    public function create(): View {
+    public function create(): View
+    {
         return view('auth.register');
     }
 
@@ -43,7 +45,7 @@ class RegisteredUserController extends Controller {
 
             Auth::login($user);
 
-            return redirect(route('dashboard', absolute: false))->with('success', 'Je bent geregistreerd en ingelogd!');
+            return redirect(route('activity.index', absolute: false))->with('success', 'Je bent geregistreerd en ingelogd!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput($request->only('name', 'email'))
                 ->with('error', 'Er is een fout opgetreden tijdens de registratie. Probeer het opnieuw.');

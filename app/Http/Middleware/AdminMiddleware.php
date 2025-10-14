@@ -9,20 +9,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
+  /**
+   * Handle an incoming request.
+   *
+   * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+   */
 
-    public function handle(Request $request, Closure $next): Response
-    {
+  public function handle(Request $request, Closure $next): Response
+  {
 
-        if (!Auth::check() || !Auth::user()->admin) {
-          // abort(403, 'Unauthorized');
-          return redirect()->route('dashboard');
-        }
-
-        return $next($request);
+    if (!Auth::check() || !Auth::user()->admin) {
+      // abort(403, 'Unauthorized');
+      return redirect()->route('activity.index');
     }
+
+    return $next($request);
+  }
 }

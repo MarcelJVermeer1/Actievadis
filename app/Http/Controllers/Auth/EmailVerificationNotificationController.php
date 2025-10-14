@@ -12,7 +12,7 @@ class EmailVerificationNotificationController extends Controller {
      */
     public function store(Request $request): RedirectResponse {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false))->with('success', 'Je e-mailadres is geverifieerd.');
+            return redirect()->intended(route('activity.index', absolute: false))->with('success', 'Je e-mailadres is geverifieerd.');
         }
 
         $request->user()->sendEmailVerificationNotification();

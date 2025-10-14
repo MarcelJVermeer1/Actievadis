@@ -6,14 +6,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UserManagementController extends Controller {
+class UserManagementController extends Controller
+{
     /**
      * Display the user data.
      */
-    public function index() {
+    public function index()
+    {
         $currentUser = Auth::user();
         if (!$currentUser || !$currentUser->is_admin) {
-            return redirect()->route('dashboard');
+            return redirect()->route('activity.index');
         }
         return view('usermanagement', [
             'currentUser' => $currentUser,
@@ -24,10 +26,11 @@ class UserManagementController extends Controller {
     /**
      * Remove the user from the database.
      */
-    public function destroy(string $id) {
+    public function destroy(string $id)
+    {
         $currentUser = Auth::user();
         if (!$currentUser || !$currentUser->is_admin) {
-            return redirect()->route('dashboard');
+            return redirect()->route('activity.index');
         }
 
         $user = User::findOrFail($id);
