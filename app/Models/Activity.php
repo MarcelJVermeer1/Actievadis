@@ -39,6 +39,15 @@ class Activity extends Model
       ->withTimestamps();
   }
 
+
+     public function getImageSrcAttribute()
+    {
+        return $this->image
+            ? 'data:image/jpeg;base64,' . base64_encode($this->image)
+            : null;
+    }
+
+
   public function guestUsers()
   {
     return $this->belongsToMany(Activity::class, 'guest_enrollments')

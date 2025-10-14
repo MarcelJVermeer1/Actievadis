@@ -109,8 +109,8 @@ class ActivityController extends Controller
     Activity::create($validated);
 
     return redirect()->route('activity.index')
-      ->with('success', 'Activiteit succesvol aangemaakt!');
-  }
+        ->with('success', 'Activiteit succesvol aangemaakt!');
+}
 
   public function enrolled()
   {

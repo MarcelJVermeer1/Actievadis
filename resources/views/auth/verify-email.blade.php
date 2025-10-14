@@ -1,7 +1,8 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Bedankt voor het registreren! Voordat je begint, kun je je e-mailadres verifiëren door op de link te klikken die we zojuist naar je hebben gemaild? Als je de e-mail niet hebt ontvangen, sturen we je graag een andere.') }}
+    <div class="mb-2 font-semibold text-sm text-gray-600">
+        {{ __('Bedankt voor het registreren! We hebben je een mail verstuurd met een verificatielink, Je kan verder nadat je die hebt bevestigd.') }}
     </div>
+    <p class="text-xs text-gray-500 text-opacity-70 mb-4">In het geval dat het niet gelukt is kan je op de knop klikken om de mail opnieuw te versturen.</p>
 
     @if (session('status') == 'verification-link-sent')
     <div class="mb-4 font-medium text-sm text-green-600">

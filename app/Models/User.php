@@ -5,14 +5,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
-{
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+class User extends Authenticatable implements MustVerifyEmail {
     use HasFactory, Notifiable, HasUuids;
 
     protected $keyType = 'string';
@@ -51,8 +50,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
+    protected function casts(): array {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
@@ -60,8 +58,7 @@ class User extends Authenticatable
     }
 
     // To return the activities a user is enrolled in
-    public function enrolledActivities()
-    {
+    public function enrolledActivities() {
         return $this->belongsToMany(Activity::class, 'enrolled', 'user_id', 'activity_id')
             ->withTimestamps();
     }
