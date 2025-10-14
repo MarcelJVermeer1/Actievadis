@@ -64,7 +64,7 @@
           <input type="number" name="min" value="{{ old('min', $activity->min) }}" class="w-full border rounded-lg p-2">
         </div>
         <div>
-          <label class="block font-medium">Max capaciteit</label>
+          <label class="block font-medium">Max deelnemers</label>
           <input type="number" name="max_capacity" value="{{ old('max_capacity', $activity->max_capacity) }}"
             class="w-full border rounded-lg p-2" required>
         </div>
@@ -100,7 +100,7 @@
       </div>
 
       <div class="flex justify-end space-x-3">
-        <a href="{{ route('dashboard') }}"
+        <a href="{{ route('activity.show', $activity->id) }}"
           class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">Annuleren</a>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Opslaan</button>
       </div>
