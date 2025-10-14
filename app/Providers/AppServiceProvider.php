@@ -24,12 +24,11 @@ class AppServiceProvider extends ServiceProvider {
 
         VerifyEmail::toMailUsing(function ($notifiable, $verificationUrl) {
             return (new MailMessage)
-                ->subject(__('Verificatie Account'))
-                ->greeting(__('Hallo, ' . $notifiable->name))
-                ->line(__('U heeft een verificatie-e-mail aangevraagd. Klik op de knop hieronder om uw e-mailadres te verifiëren.'))
-                ->action(__('Verifieer E-mailadres'), $verificationUrl)
-                ->salutation(__('Met vriendelijke groet,') . "\n" . config('app.name'))
-                ->line(__('Als de knop niet werkt, kopieer en plak de volgende link in uw browser:') . "\n" . $verificationUrl);
+                ->subject(__('mail.verify.subject'))
+                ->greeting(__('mail.verify.greeting', ['name' => $notifiable->name]))
+                ->line(__('mail.verify.line'))
+                ->action(__('mail.verify.action'), $verificationUrl)
+                ->salutation(__('mail.verify.salutation', ['app' => config('app.name')]));
         });
 
         ResetPassword::toMailUsing(function ($notifiable, $token) {
@@ -39,12 +38,11 @@ class AppServiceProvider extends ServiceProvider {
             ], false));
 
             return (new MailMessage)
-                ->subject(__('Wachtwoord Vergeten'))
-                ->greeting(__('Hallo, ' . $notifiable->name))
-                ->line(__('U heeft aangegeven dat u uw wachtwoord bent vergeten. Klik op de knop hieronder om uw wachtwoord opnieuw in te stellen.'))
-                ->action(__('Opnieuw Instellen'), $url)
-                ->salutation(__('Met vriendelijke groet,') . "\n" . config('app.name'))
-                ->line(__('Als de knop niet werkt, kopieer en plak de volgende link in uw browser:') . "\n" . $url);
+                ->subject(__('mail.reset.subject'))
+                ->greeting(__('mail.reset.greeting', ['name' => $notifiable->name]))
+                ->line(__('mail.reset.line'))
+                ->action(__('mail.reset.action'), $url)
+                ->salutation(__('mail.reset.salutation', ['app' => config('app.name')]));
         });
     }
 }
