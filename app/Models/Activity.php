@@ -33,6 +33,13 @@ class Activity extends Model
     });
   }
 
+     public function getImageSrcAttribute()
+    {
+        return $this->image
+            ? 'data:image/jpeg;base64,' . base64_encode($this->image)
+            : null;
+    }
+
   public function users()
   {
     return $this->belongsToMany(User::class, 'enrolled', 'activity_id', 'user_id')
