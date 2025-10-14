@@ -148,17 +148,19 @@ class ActivityController extends Controller
         'email' => $user->email,
       ];
     })->merge(
-        $guests->map(function ($guest) {
-          return [
-            'type' => 'Gast',
-            'name' => $guest->pivot->name,
-            'email' => $guest->pivot->email,
-          ];
-        })
-      );
+      $guests->map(function ($guest) {
+        return (object) [
+          'type' => 'Gast',
+          'name' => $guest->pivot->name,
+          'email' => $guest->pivot->email,
+        ];
+      })
+    );
 
     $page = request()->get('page', 1);
     $perPage = 10;
+
+    $amountOfEnrollments = $users->count() + $guests->count();
 
     $paginator = new LengthAwarePaginator(
       $combined->forPage($page, $perPage),
