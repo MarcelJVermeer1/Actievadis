@@ -72,7 +72,16 @@
                     </a>
                 @endif
             </div>
-        </div>
+            
+          </div>
+          @if(Auth::user() && Auth::user()->is_admin)
+<div class="mb-6 mr-4 self-end">
+  <a href="{{ route('activities.edit', $activity->id) }}" 
+     class="border-amber-500 text-amber-500  hover:bg-amber-500 hover:text-white font-semibold px-4 py-2 rounded-lg">
+    Bewerken
+  </a>
+</div>
+@endif
     </div>
 
     <!-- Enrolled List (unchanged) -->
