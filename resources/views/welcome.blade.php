@@ -73,6 +73,7 @@
 
 
     <!-- Modal -->
+    @if ($activitiesList->count() > 0)
     <div id="enrollment-modal" class="fixed inset-0 hidden bg-gray-500/75 z-50 opacity-0 transition-opacity duration-300">
         <div
             class="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-6 w-full max-w-md scale-95 transition-transform duration-300">
@@ -108,6 +109,7 @@
             </form>
         </div>
     </div>
+    @endif
 
     <!-- Modal Scripts -->
     <script>
