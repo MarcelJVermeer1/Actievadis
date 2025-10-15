@@ -83,18 +83,6 @@ class ActivityController extends Controller {
       'visibility' => 'required',
       'necessities' => 'nullable|string|max:255',
       'image' => 'nullable|image|max:16384', // 16 MB max
-      'name' => 'required|string|max:255',
-      'location' => 'required|string|max:255',
-      'food' => 'boolean',
-      'description' => 'required|min:5|max:1000',
-      'starttime' => 'required|date',
-      'endtime' => 'required|date|after:starttime',
-      'costs' => 'required|numeric',
-      'min' => 'nullable|integer|min:0',
-      'max_capacity' => 'required|integer|min:1',
-      'visibility' => 'required',
-      'necessities' => 'nullable|string|max:255',
-      'image' => 'nullable|image|max:16384', // 16 MB max
     ]);
 
     // ✅ Create an image manager with the GD driver (v3 syntax)
@@ -123,14 +111,12 @@ class ActivityController extends Controller {
       ->with('success', 'Activiteit succesvol aangemaakt!');
   }
 
-  public function edit($id)
-  {
+  public function edit($id) {
     $activity = Activity::findOrFail($id);
     return view('admin.editActivity', compact('activity'));
   }
 
-  public function update(Request $request, $id)
-  {
+  public function update(Request $request, $id) {
     $activity = Activity::findOrFail($id);
 
     // Replace comma with dot for numeric consistency
