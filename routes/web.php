@@ -38,5 +38,6 @@ Route::middleware(['auth', 'verified'])->controller(EnrolledController::class)->
 });
 Route::post('/guest-enrollment', [GuestEnrollmentController::class, 'store'])->name('guest.enrollment.store');
 Route::get('/guest-enrollment/verify/{id}', [GuestEnrollmentController::class, 'verify'])->name('guest.enrollment.verify');
+Route::get('/guest-enrollment/deregister/{id}', [GuestEnrollmentController::class, 'deregister'])->name('guest.enrollment.deregister');
 
 require __DIR__ . '/auth.php';
