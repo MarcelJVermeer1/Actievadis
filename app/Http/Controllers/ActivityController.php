@@ -12,16 +12,13 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class ActivityController extends Controller
-{
-  public function index()
-  {
+class ActivityController extends Controller {
+  public function index() {
     $sortEnrolled = request('sort_enrolled', 'date_asc');
     $sortAvailable = request('sort_available', 'date_asc');
     $sortOld = request('sort_old', 'date_asc');
 
-    function getOrder($sort)
-    {
+    function getOrder($sort) {
       return match ($sort) {
         'az' => ['name', 'asc'],
         'za' => ['name', 'desc'],
@@ -64,30 +61,16 @@ class ActivityController extends Controller
     ));
   }
 
-  public function create(Request $request)
-  {
+  public function create(Request $request) {
     return view('admin.createActivity');
   }
 
-  public function store(Request $request)
-  {
+  public function store(Request $request) {
     // Replace comma with dot for numeric consistency
     $request->merge(['costs' => str_replace(',', '.', $request->input('costs'))]);
 
     // Validate all inputs
     $validated = $request->validate([
-      'name' => 'required|string|max:255',
-      'location' => 'required|string|max:255',
-      'food' => 'boolean',
-      'description' => 'required|min:5|max:1000',
-      'starttime' => 'required|date',
-      'endtime' => 'required|date|after:starttime',
-      'costs' => 'required|numeric',
-      'min' => 'nullable|integer|min:0',
-      'max_capacity' => 'required|integer|min:1',
-      'visibility' => 'required',
-      'necessities' => 'nullable|string|max:255',
-      'image' => 'nullable|image|max:16384', // 16 MB max
       'name' => 'required|string|max:255',
       'location' => 'required|string|max:255',
       'food' => 'boolean',
@@ -128,14 +111,12 @@ class ActivityController extends Controller
       ->with('success', 'Activiteit succesvol aangemaakt!');
   }
 
-  public function edit($id)
-  {
+  public function edit($id) {
     $activity = Activity::findOrFail($id);
     return view('admin.editActivity', compact('activity'));
   }
 
-  public function update(Request $request, $id)
-  {
+  public function update(Request $request, $id) {
     $activity = Activity::findOrFail($id);
 
     // Replace comma with dot for numeric consistency
@@ -177,15 +158,13 @@ class ActivityController extends Controller
   }
 
 
-  public function enrolled()
-  {
+  public function enrolled() {
     $enrolledActivities = auth()->user()->enrolledActivities;
 
     return view('enrolled.index', compact('enrolledActivities'));
   }
 
-  public function show($id)
-  {
+  public function show($id) {
     $activity = Activity::findOrFail($id);
     $user = Auth::user();
 
@@ -200,7 +179,9 @@ class ActivityController extends Controller
     }
 
     $users = $canViewEnrollments ? $activity->users : collect();
-    $guests = $canViewEnrollments ? $activity->guestUsers : collect();
+    $guests = $canViewEnrollments
+      ? $activity->guestUsers()->where('verified', true)->get()
+      : collect();
 
     // Convert to plain collections
     $users = collect($users->all());
@@ -221,7 +202,7 @@ class ActivityController extends Controller
         ];
       })
     );
-    
+
     $page = request()->get('page', 1);
     $perPage = 10;
 
@@ -243,8 +224,7 @@ class ActivityController extends Controller
     ));
   }
 
-  public function getActivitiesList()
-  {
+  public function getActivitiesList() {
     $activitiesList = Activity::where('starttime', '>=', now())
       ->orderBy('starttime', 'asc')
       ->get();
