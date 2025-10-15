@@ -7,6 +7,7 @@ use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\GuestEnrollmentVerification;
+use App\Mail\GuestDeregistration;
 use Illuminate\Http\RedirectResponse;
 
 class GuestEnrollmentController extends Controller {
@@ -43,6 +44,26 @@ class GuestEnrollmentController extends Controller {
         $guest->verified = true;
         $guest->save();
 
+        Mail::to($guest->email)->send(new GuestDeregistration($guest));
+
         return redirect()->route('welcome')->with('success', 'Je inschrijving is bevestigd.');
+    }
+
+    public function deregister(Request $request, $id): RedirectResponse {
+        $signature = $request->query('signature');
+        $expectedSignature = sha1($id . config('app.key'));
+
+        if ($signature !== $expectedSignature) {
+            return redirect()->route('welcome')->with('error', 'Ongeldige of verlopen afmeldlink.');
+        }
+
+        $guest = GuestEnrollment::find($id);
+        if (! $guest) {
+            return redirect()->route('welcome')->with('error', 'Inschrijving niet gevonden.');
+        }
+
+        $guest->delete();
+
+        return redirect()->route('welcome')->with('success', 'Je bent uitgeschreven voor de activiteit.');
     }
 }
