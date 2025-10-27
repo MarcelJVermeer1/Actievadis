@@ -5,13 +5,12 @@
         </h2>
     </x-slot>
 
-    <div class="w-4/6 mx-auto my-8 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col lg:flex-row">
+    <div
+        class="w-4/6 mx-auto my-8 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col lg:flex-row">
         <!-- Image Section -->
         @if($activity->image)
             <div class="lg:w-1/3 w-full h-64 lg:h-auto overflow-hidden">
-                <img src="{{ $activity->image_src }}"
-                     alt="{{ $activity->name }}"
-                     class="w-full h-full object-contain">
+                <img src="{{ $activity->image_src }}" alt="{{ $activity->name }}" class="w-full h-full object-contain">
             </div>
         @endif
 
@@ -58,7 +57,7 @@
 
                 @if($userIsEnrolled)
                     <a href="{{ route('enrolled.destroy', $activity->id) }}"
-                       class="px-5 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition font-medium shadow-sm">
+                        class="px-5 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition font-medium shadow-sm">
                         Afmelden
                     </a>
                 @elseif($activity->max_capacity <= $amountOfEnrollments)
@@ -67,21 +66,29 @@
                     </span>
                 @else
                     <a href="{{ route('activity.enroll', $activity->id) }}"
-                       class="px-5 py-2 border border-amber-500 text-amber-500 rounded-md hover:bg-amber-500 hover:text-white transition font-medium shadow-sm">
+                        class="px-5 py-2 border border-amber-500 text-amber-500 rounded-md hover:bg-amber-500 hover:text-white transition font-medium shadow-sm">
                         Aanmelden
                     </a>
                 @endif
             </div>
-            
-          </div>
-          @if(Auth::user() && Auth::user()->is_admin)
-<div class="mb-6 mr-4 self-end">
-  <a href="{{ route('activities.edit', $activity->id) }}" 
-     class="border-amber-500 text-amber-500  hover:bg-amber-500 hover:text-white font-semibold px-4 py-2 rounded-lg">
-    Bewerken
-  </a>
-</div>
-@endif
+
+        </div>
+        @if(Auth::user() && Auth::user()->is_admin)
+            <div class="mb-6 mr-4 self-end flex gap-3">
+                <a href="{{ route('activities.edit', $activity->id) }}"
+                    class="px-5 py-2 border border-amber-500 text-amber-500 rounded-md hover:bg-amber-500 hover:text-white transition font-medium shadow-sm">
+                    Bewerken
+                </a>
+                <form action="{{ route('activity.destroy', $activity->id) }}" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="px-5 py-2 border border-amber-500 text-amber-500 rounded-md hover:bg-amber-500 hover:text-white transition font-medium shadow-sm">
+                        Verwijderen
+                    </button>
+                </form>
+            </div>
+        @endif
     </div>
 
     <!-- Enrolled List (unchanged) -->
@@ -102,7 +109,7 @@
 
                             <span
                                 class="text-xs uppercase px-2 py-1 rounded-full 
-                                       {{ $participant->type === 'Gast' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700' }}">
+                                                                                                                                                                                                               {{ $participant->type === 'Gast' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700' }}">
                                 {{ $participant->type }}
                             </span>
                         </li>

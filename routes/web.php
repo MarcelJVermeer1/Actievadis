@@ -25,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activity.show');
     Route::resource('/activity', ActivityController::class)->names('activity');
     Route::get('/enrolled', [EnrolledController::class, 'index'])->name('activity.enrolled');
 });
@@ -32,12 +33,14 @@ Route::middleware(['admin', 'auth', 'verified'])->controller(ActivityController:
     Route::get('/createActivities', 'create')->name('activities.create');
     Route::post('/store', 'store')->name('activities.store');
     Route::get('/activities/{id}/edit', 'edit')->name('activities.edit');
+    Route::delete('/activities/{id}', 'destroy')->name('activity.destroy');
     Route::put('/activities/{id}', 'update')->name('activities.update');
 });
 Route::middleware(['auth', 'verified'])->controller(EnrolledController::class)->group(function () {
-    Route::get('/activity/enroll/{activity}',  'store')->name('activity.enroll');
+    Route::get('/activity/enroll/{activity}', 'store')->name('activity.enroll');
     Route::get('/enrolled/{activity}', 'destroy')->name('enrolled.destroy');
 });
+
 Route::post('/guest-enrollment', [GuestEnrollmentController::class, 'store'])->name('guest.enrollment.store');
 Route::get('/guest-enrollment/verify/{id}', [GuestEnrollmentController::class, 'verify'])->name('guest.enrollment.verify');
 Route::get('/guest-enrollment/deregister/{id}', [GuestEnrollmentController::class, 'deregister'])->name('guest.enrollment.deregister');
