@@ -60,3 +60,12 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (sessionStorage.scrollPos) window.scrollTo(0, sessionStorage.scrollPos);
+    });
+    window.onbeforeunload = () => {
+        sessionStorage.scrollPos = window.scrollY;
+    };
+</script>

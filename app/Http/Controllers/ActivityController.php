@@ -52,9 +52,8 @@ class ActivityController extends Controller
       ->paginate(3, ['*'], 'available_page')
       ->appends(request()->query());
 
-    $oldActivities = Activity::withCount('enrolled') // ✅ ADDED
+    $oldActivities = Activity::withCount('enrolled')
       ->whereNull('deleted_at')
-      ->whereIn('id', $enrolledIds)
       ->where('endtime', '<', now())
       ->orderBy($colO, $dirO)
       ->paginate(3, ['*'], 'old_page')
