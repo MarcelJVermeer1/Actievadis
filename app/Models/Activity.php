@@ -20,8 +20,13 @@ class Activity extends Model
     'visibility',
     'necessities',
     'image',
+    'deleted_at',
   ];
-
+  protected $dates = [
+    'starttime',
+    'endtime',
+    'deleted_at',
+  ];
   public $incrementing = false;
   public static function boot()
   {
@@ -33,12 +38,12 @@ class Activity extends Model
     });
   }
 
-     public function getImageSrcAttribute()
-    {
-        return $this->image
-            ? 'data:image/jpeg;base64,' . base64_encode($this->image)
-            : null;
-    }
+  public function getImageSrcAttribute()
+  {
+    return $this->image
+      ? 'data:image/jpeg;base64,' . base64_encode($this->image)
+      : null;
+  }
 
   public function users()
   {
